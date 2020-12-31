@@ -5,7 +5,7 @@ You can download or fork the repository freely. If you see a mistake you can sen
 
 ## Available functions documentation
 
-You can find the full documentation [on this article](linkhere) for all the functions as you can see on the image above. 
+You can find the full documentation [on this article](https://towardsdatascience.com/optimization-eye-pleasure-78-benchmark-test-functions-for-single-objective-optimization-92e7ed1d1f12?sk=9183bfff85db523dbee1237d86c524cf) for all the functions as you can see on the image above. 
 
 ![doc_example.png](src/doc_example.png)
 
