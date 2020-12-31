@@ -11,7 +11,7 @@ You can find the full documentation [on this article](https://towardsdatascience
 
 ## Easy Use
 
-### Onliner access: Filter the functions with their characteristics
+### One-liner access: Filter the functions with their characteristics
 
 ```python
 import pybenchfunction as bench
