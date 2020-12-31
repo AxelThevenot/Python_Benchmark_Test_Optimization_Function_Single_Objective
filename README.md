@@ -1,6 +1,6 @@
 # Python_Benchmark_Test_Optimization_Function_Single_Objective
 
-Here a repository where you can find and easy access python implementation of a benchmark of function to test optimizations for single objective optimization.
+Here a repository where you can find and easy access python implementation of a benchmark of functions to challenge single objective optimizations.
 You can download or fork the repository freely. If you see a mistake you can send me a mail at axel.arcueil@gmail.com or contact me on [LinkedIn](https://www.linkedin.com/in/axel-thevenot/).
 
 ## Available functions documentation
