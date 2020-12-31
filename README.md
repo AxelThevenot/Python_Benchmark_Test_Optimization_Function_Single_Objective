@@ -1,13 +1,13 @@
 # Python_Benchmark_Test_Optimization_Function_Single_Objective
 
 Here a repository where you can find and easy access python implementation of a benchmark of function to test optimizations for single objective optimization.
-You can download or fork the repository freely. If you see a mistake you can send me a mail at axel.arcueil@gmail.com or contact me on (LinkedIn)[https://www.linkedin.com/in/axel-thevenot/].
+You can download or fork the repository freely. If you see a mistake you can send me a mail at axel.arcueil@gmail.com or contact me on [LinkedIn](https://www.linkedin.com/in/axel-thevenot/).
 
 ## Available functions documentation
 
-You can find the full documentation (on this article)[linkhere] for all the functions as you can see on the image above. 
+You can find the full documentation [on this article](linkhere) for all the functions as you can see on the image above. 
 
-!(doc_example.png)[src/doc_example.png]
+![doc_example.png](src/doc_example.png)
 
 ## Easy Use
 
@@ -51,8 +51,8 @@ thevenot = bench.function.Thevenot(2)
 bench.plot_2d(thevenot, n_space=1000, ax=None)
 bench.plot_3d(thevenot, n_space=1000, ax=None)
 ```
-!(2D_plot.png)[src/2D_plot.png]
-!(3D_plot.png)[src/3D_plot.png]
+![2D_plot.png](src/2D_plot.png)
+![3D_plot.png](src/3D_plot.png)
 
 ### Access/change the parameters of parametrics functions
 
@@ -83,8 +83,7 @@ latex_img = bench.latex_img(latex)
 plt.imshow(latex_img)
 plt.show()
 ```
-
-!(latex_formula.png)[src/latex_formula.png]
+![latex_formula.png](src/latex_formula.png)
 
 ## Uniform implementation
 
