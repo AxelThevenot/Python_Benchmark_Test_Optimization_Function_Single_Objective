@@ -11,6 +11,86 @@ All the functions are describe as you can see on the image above.
 
 ![doc_example.png](src/doc_example.png)
 
+- Ackley Function
+- Ackley N. 2 Function
+- Ackley N. 3 Function
+- Ackley N. 4 Function
+- Adjiman Function
+- Alpine N. 1 Function
+- Alpine N. 2 Function
+- Bartels Conn Function
+- Beale Function
+- Bird Function
+- Bohachevsky N. 1 Function
+- Bohachevsky N. 2 Function
+- Bohachevsky N. 3 Function
+- Booth Function
+- Branin Function
+- Brent Function
+- Brown Function
+- Bukin N. 6 Function
+- Cross-in-Tray Function
+- Colville Function
+- De Jong N. 5 Function
+- Deckkers-Aarts Function
+- Dixon-Price Function
+- Drop-Wave Function
+- Easom Function
+- Egg Crate Function
+- Eggholder function
+- Exponential Function
+- Forrester Function
+- Goldstein-Price Function
+- Gramacy & Lee Function
+- Griewank Function
+- Happy Cat Function
+- Himmelblau Function
+- Holder-Table Function
+- Keane Function
+- Langermann Function
+- Leon Function
+- Levy N. 13 Function
+- Matyas Function
+- McCormick Function
+- Michalewicz Function
+- Periodic Function
+- Perm Function 0, d, β
+- Perm Function d, β
+- Powell Function
+- Qing Function
+- Quartic Function
+- Rastrigin Function
+- Ridge Function
+- Rosenbrock Function
+- Rotated Hyper-Ellipsoid Function
+- Salomon Function
+- Schaffer N. 1 Function
+- Schaffer N. 2 Function
+- Schaffer N. 3 Function
+- Schaffer N. 4 Function
+- Schwefel Function
+- Schwefel 2.20 Function
+- Schwefel 2.21 Function
+- Schwefel 2.22 Function
+- Schwefel 2.23 Function
+- Shekel Function
+- Shubert Function
+- Shubert N. 3 Function
+- Shubert N. 4 Function
+- Six-Hump Camel Function
+- Sphere Function
+- Styblinski-Tank Function
+- Sum Squares Function
+- Three-Hump Camel Function
+- Thevenot Function
+- Trid Function
+- Wolfe Function
+- Xin-She Yang Function
+- Xin-She Yang N. 2 Function
+- Xin-She Yang N. 3 Function
+- Xin-She Yang N. 4 Function
+- Zakharov Function
+
 ## Easy Use
 
 ### One-liner access: Filter the functions with their characteristics
