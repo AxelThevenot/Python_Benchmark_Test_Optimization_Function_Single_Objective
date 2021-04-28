@@ -2348,7 +2348,8 @@ class Shubert:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.prod(np.sum([np.cos((j+1)*X + j) for j in range(1, 5+1)]))
+        for i in range(0,d):
+            res = np.prod(np.sum([i * np.cos((j+1)*X[i] + j) for j in range(1, 5+1)]))
         return res
 
 class ShubertN3:
