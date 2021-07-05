@@ -7,7 +7,7 @@ from matplotlib import cm
 from PIL import Image
 
 
-cmap = [(0, '#2f9599'), (0.45, '#eee'), (1, '#8800ff')]
+cmap = [(0, '#2f9599'), (0.45, '#eeeeee'), (1, '#8800ff')]
 cmap = cm.colors.LinearSegmentedColormap.from_list('Custom', cmap, N=256)
 
 
