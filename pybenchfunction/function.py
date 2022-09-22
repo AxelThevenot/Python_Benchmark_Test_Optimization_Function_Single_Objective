@@ -2,11 +2,13 @@ import numpy as np
 
 
 class Thevenot:
-    name = 'Thevenot'
-    latex_formula = r'f(\mathbf{x}) = exp(-\sum_{i=1}^{d}(x_i / \beta)^{2m}) - 2exp(-\prod_{i=1}^{d}x_i^2) \prod_{i=1}^{d}cos^ 2(x_i) '
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-2\pi, 2\pi], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=-1, \text{ for}, m=5, \beta=15'
+    name = "Thevenot"
+    latex_formula = r"f(\mathbf{x}) = exp(-\sum_{i=1}^{d}(x_i / \beta)^{2m}) - 2exp(-\prod_{i=1}^{d}x_i^2) \prod_{i=1}^{d}cos^ 2(x_i) "
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-2\pi, 2\pi], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=-1, \text{ for}, m=5, \beta=15"
     continuous = True
     convex = True
     separable = True
@@ -17,34 +19,39 @@ class Thevenot:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, m=5, beta=15):
         self.d = d
-        self.input_domain = np.array([[-2*np.pi, 2*np.pi] for _ in range(d)])
+        self.input_domain = np.array([[-2 * np.pi, 2 * np.pi] for _ in range(d)])
         self.m = m
         self.beta = beta
 
     def get_param(self):
-        return {'m': self.m, 'beta': self.beta}
+        return {"m": self.m, "beta": self.beta}
 
     def get_global_minimum(self, d):
-        X = np.array([0 for i in range(1, d+1)])
+        X = np.array([0 for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.exp(-np.sum((X/self.beta)**(2*self.m)))
-        res = res - 2*np.exp(-np.prod(X**2))*np.prod(np.cos(X)**2)
+        res = np.exp(-np.sum((X / self.beta) ** (2 * self.m)))
+        res = res - 2 * np.exp(-np.prod(X**2)) * np.prod(np.cos(X) ** 2)
         return res
 
+
 class Ackley:
-    name = 'Ackley'
-    latex_formula = r'f(\mathbf{x}) = -a \cdot exp(-b\sqrt{\frac{1}{d}\sum_{i=1}^{d}x_i^2})-exp(\frac{1}{d}\sum_{i=1}^{d}cos(c \cdot x_i))+ a + exp(1)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-32, 32], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f((0, ..., 0)) = 0'
+    name = "Ackley"
+    latex_formula = r"f(\mathbf{x}) = -a \cdot exp(-b\sqrt{\frac{1}{d}\sum_{i=1}^{d}x_i^2})-exp(\frac{1}{d}\sum_{i=1}^{d}cos(c \cdot x_i))+ a + exp(1)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-32, 32], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f((0, ..., 0)) = 0"
     continuous = True
     convex = False
     separable = True
@@ -55,19 +62,20 @@ class Ackley:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d, a=20, b=0.2, c=2*np.pi):
+    def __init__(self, d, a=20, b=0.2, c=2 * np.pi):
         self.d = d
         self.input_domain = np.array([[-32, 32] for _ in range(d)])
         self.a = a
         self.b = b
         self.c = c
 
-
     def get_param(self):
-        return {'a': self.a, 'b': self.b, 'c': self.c}
+        return {"a": self.a, "b": self.b, "c": self.c}
 
     def get_global_minimum(self, d):
         X = np.array([1 / (i + 1) for i in range(d)])
@@ -76,16 +84,17 @@ class Ackley:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = - self.a * np.exp(-self.b * np.sqrt(np.mean(X**2)))
-        res = res - np.exp(np.mean(np.cos(self.c*X))) + self.a + np.exp(1)
+        res = -self.a * np.exp(-self.b * np.sqrt(np.mean(X**2)))
+        res = res - np.exp(np.mean(np.cos(self.c * X))) + self.a + np.exp(1)
         return res
 
+
 class AckleyN2:
-    name = 'Ackley N. 2'
-    latex_formula = r'f(x, y) = -200exp(-0.2\sqrt{x^2 + y^2)}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-32, 32], y \in [-32, 32]'
-    latex_formula_global_minimum = r'f(0, 0)=-200'
+    name = "Ackley N. 2"
+    latex_formula = r"f(x, y) = -200exp(-0.2\sqrt{x^2 + y^2)}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-32, 32], y \in [-32, 32]"
+    latex_formula_global_minimum = r"f(0, 0)=-200"
     continuous = False
     convex = True
     separable = False
@@ -96,8 +105,10 @@ class AckleyN2:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return d  == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d=None):
         self.input_domain = np.array([[-32, 32], [-32, 32]])
@@ -114,11 +125,12 @@ class AckleyN2:
         res = -200 * np.exp(-0.2 * np.sqrt(x**2 + y**2))
         return res
 
+
 class AckleyN3:
-    name = 'Ackley N. 3'
-    latex_formula = r'f(x, y) = -200exp(-0.2\sqrt{x^2 + y^2}) + 5exp(cos(3x) + sin(3y))'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-32, 32], y \in [-32, 32]'
+    name = "Ackley N. 3"
+    latex_formula = r"f(x, y) = -200exp(-0.2\sqrt{x^2 + y^2}) + 5exp(cos(3x) + sin(3y))"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-32, 32], y \in [-32, 32]"
     latex_formula_global_minimum = (
         r"f(x, y)\approx-186.4112127, at$$ $$x=\approx0.0000000008,"
         r" and$$ $$ y\approx-0.0068"
@@ -133,8 +145,10 @@ class AckleyN3:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return d  == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d=None):
         self.input_domain = np.array([[-32, 32], [-32, 32]])
@@ -149,15 +163,20 @@ class AckleyN3:
     def __call__(self, X):
         x, y = X
         res = -200 * np.exp(-0.2 * np.sqrt(x**2 + y**2))
-        res += 5 * np.exp(np.cos(3*x) + np.sin(3*y))
+        res += 5 * np.exp(np.cos(3 * x) + np.sin(3 * y))
         return res
 
+
 class AckleyN4:
-    name = 'Ackley N. 4'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d-1}\left( e^{-0.2}\sqrt{x_i^2+x_{i+1}^2} + 3\left( cos(2x_i) + sin(2x_{i+1}) \right) \right)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-35, 35], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(x, y)\approx-4.590101633799122, at$$ $$x=-1.51, and$$ $$ y=-0.755'
+    name = "Ackley N. 4"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d-1}\left( e^{-0.2}\sqrt{x_i^2+x_{i+1}^2} + 3\left( cos(2x_i) + sin(2x_{i+1}) \right) \right)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-35, 35], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = (
+        r"f(x, y)\approx-4.590101633799122, at$$ $$x=-1.51, and$$ $$ y=-0.755"
+    )
     continuous = False
     convex = False
     separable = False
@@ -168,8 +187,10 @@ class AckleyN4:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d=None):
         self.input_domain = np.array([[-35, 35] for _ in range(d)])
@@ -178,21 +199,26 @@ class AckleyN4:
         return {}
 
     def get_global_minimum(self, d):
-        print('WARNING ! Is only is available for d=2')
+        print("WARNING ! Is only is available for d=2")
         X = np.array([-1.51, -0.755])
         return (X, self(X))
 
     def __call__(self, X):
         X, Xp1 = X[:-1], X[1]
-        res = np.sum(np.exp(-0.2) * np.sqrt(X**2 + Xp1**2) + 3 * np.cos(2*X) + np.sin(2*Xp1))
+        res = np.sum(
+            np.exp(-0.2) * np.sqrt(X**2 + Xp1**2)
+            + 3 * np.cos(2 * X)
+            + np.sin(2 * Xp1)
+        )
         return res
 
+
 class Adjiman:
-    name = 'Adjiman'
-    latex_formula = r'f(x, y)=cos(x)sin(y) - \frac{x}{y^2+1}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-1, 2], y \in [-1, 1]'
-    latex_formula_global_minimum = r'f(2, 0.10578347)=-2.02181'
+    name = "Adjiman"
+    latex_formula = r"f(x, y)=cos(x)sin(y) - \frac{x}{y^2+1}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-1, 2], y \in [-1, 1]"
+    latex_formula_global_minimum = r"f(2, 0.10578347)=-2.02181"
     continuous = True
     convex = False
     separable = False
@@ -203,8 +229,10 @@ class Adjiman:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -223,12 +251,15 @@ class Adjiman:
         res = np.cos(x) * np.sin(y) - x / (y**2 + 1)
         return res
 
+
 class AlpineN1:
-    name = 'Alpine N. 1'
-    latex_formula = r'f(\mathbf x) = \sum_{i=1}^{d}|x_i sin(x_i)+0.1x_i|'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [0, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Alpine N. 1"
+    latex_formula = r"f(\mathbf x) = \sum_{i=1}^{d}|x_i sin(x_i)+0.1x_i|"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [0, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = False
     convex = False
     separable = True
@@ -239,8 +270,10 @@ class AlpineN1:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -254,15 +287,18 @@ class AlpineN1:
         return (X, self(X))
 
     def __call__(self, X):
-        res = np.sum(np.abs(X * np.sin(X) + 0.1*X))
+        res = np.sum(np.abs(X * np.sin(X) + 0.1 * X))
         return res
 
+
 class AlpineN2:
-    name = 'Alpine N. 2'
-    latex_formula = r'f(\mathbf x)=- \prod_{i=1}^{d}\sqrt{x_i}sin(x_i)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [0, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(7.917, ..., 7.917)=-2.808^d'
+    name = "Alpine N. 2"
+    latex_formula = r"f(\mathbf x)=- \prod_{i=1}^{d}\sqrt{x_i}sin(x_i)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [0, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(7.917, ..., 7.917)=-2.808^d"
     continuous = True
     convex = False
     separable = True
@@ -273,8 +309,10 @@ class AlpineN2:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -291,12 +329,13 @@ class AlpineN2:
         res = -np.prod(np.sqrt(X) * np.sin(X))
         return res
 
+
 class Bartels:
-    name = 'Bartels'
-    latex_formula = r'f(x,y)=|x^2 + y^2 + xy| + |sin(x)| + |cos(y)|'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-500, 500], y \in [-500, 500]'
-    latex_formula_global_minimum = r'f(0, 0)=1'
+    name = "Bartels"
+    latex_formula = r"f(x,y)=|x^2 + y^2 + xy| + |sin(x)| + |cos(y)|"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-500, 500], y \in [-500, 500]"
+    latex_formula_global_minimum = r"f(0, 0)=1"
     continuous = False
     convex = False
     separable = False
@@ -307,8 +346,10 @@ class Bartels:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -323,15 +364,16 @@ class Bartels:
 
     def __call__(self, X):
         x, y = X
-        res = np.abs(x**2 + y**2 + x*y) + np.abs(np.sin(x)) + np.abs(np.cos(y))
+        res = np.abs(x**2 + y**2 + x * y) + np.abs(np.sin(x)) + np.abs(np.cos(y))
         return res
 
+
 class Beale:
-    name = 'Beale'
-    latex_formula = r'f(x, y) = (1.5-x+xy)^2+(2.25-x+xy^2)^2+(2.625-x+xy^3)^2'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-4.5, 4.5], y \in [-4.5, 4.5]'
-    latex_formula_global_minimum = r'f(3, 0.5)=0'
+    name = "Beale"
+    latex_formula = r"f(x, y) = (1.5-x+xy)^2+(2.25-x+xy^2)^2+(2.625-x+xy^3)^2"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-4.5, 4.5], y \in [-4.5, 4.5]"
+    latex_formula_global_minimum = r"f(3, 0.5)=0"
     continuous = True
     convex = False
     separable = False
@@ -342,8 +384,10 @@ class Beale:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -358,15 +402,22 @@ class Beale:
 
     def __call__(self, X):
         x, y = X
-        res = (1.5  - x + x*y) **2 + (2.25 - x + x*y**2)**2 + (2.625 - x + x*y**3)**2
+        res = (
+            (1.5 - x + x * y) ** 2
+            + (2.25 - x + x * y**2) ** 2
+            + (2.625 - x + x * y**3) ** 2
+        )
         return res
 
+
 class Bird:
-    name = 'Bird'
-    latex_formula = r'f(x, y) = sin(x)exp((1-cos(y))^2)\\+cos(y)exp((1-sin(x))^2)+(x-y)^2'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-2\pi, 2\pi], y \in [-2\pi, 2\pi]'
-    latex_formula_global_minimum = r'f(x, y)\approx-106.764537, at$$ $$(x, y)=(4.70104,3.15294), and$$ $$(x, y)=(-1.58214,-3.13024)'
+    name = "Bird"
+    latex_formula = (
+        r"f(x, y) = sin(x)exp((1-cos(y))^2)\\+cos(y)exp((1-sin(x))^2)+(x-y)^2"
+    )
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-2\pi, 2\pi], y \in [-2\pi, 2\pi]"
+    latex_formula_global_minimum = r"f(x, y)\approx-106.764537, at$$ $$(x, y)=(4.70104,3.15294), and$$ $$(x, y)=(-1.58214,-3.13024)"
     continuous = True
     convex = False
     separable = False
@@ -377,32 +428,35 @@ class Bird:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
         return d == 2
 
     def __init__(self, d):
         self.d = d
-        self.input_domain = np.array([[-2*np.pi, 2*np.pi], [-2*np.pi, 2*np.pi]])
+        self.input_domain = np.array([[-2 * np.pi, 2 * np.pi], [-2 * np.pi, 2 * np.pi]])
 
     def get_param(self):
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([4.70104,3.15294], [-1.58214,-3.13024])
+        X = np.array([4.70104, 3.15294], [-1.58214, -3.13024])
         return (X, [self(x) for x in X])
 
     def __call__(self, X):
         x, y = X
-        res = np.sin(x) * np.exp((1 - np.cos(y))**2)
-        res = res + np.cos(y) * np.exp((1 - np.sin(x))**2) + (x - y) **2
+        res = np.sin(x) * np.exp((1 - np.cos(y)) ** 2)
+        res = res + np.cos(y) * np.exp((1 - np.sin(x)) ** 2) + (x - y) ** 2
         return res
 
+
 class BohachevskyN1:
-    name = 'Bohachevsky N. 1'
-    latex_formula = r'f(x, y) = x^2 + 2y^2 -0.3cos(3\pi x)-0.4cos(4\pi y)+0.7'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Bohachevsky N. 1"
+    latex_formula = r"f(x, y) = x^2 + 2y^2 -0.3cos(3\pi x)-0.4cos(4\pi y)+0.7"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = True
     separable = True
@@ -413,8 +467,10 @@ class BohachevskyN1:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -429,15 +485,22 @@ class BohachevskyN1:
 
     def __call__(self, X):
         x, y = X
-        res = x**2 + 2*y**2 - 0.3*np.cos(3*np.pi*x) - 0.4*np.cos(4*np.pi*y) + 0.7
+        res = (
+            x**2
+            + 2 * y**2
+            - 0.3 * np.cos(3 * np.pi * x)
+            - 0.4 * np.cos(4 * np.pi * y)
+            + 0.7
+        )
         return res
+
 
 class BohachevskyN2:
-    name = 'Bohachevsky N. 2'
-    latex_formula = r'f(x, y)=x^2 + 2y^2 -0.3cos(3\pi x)cos(4\pi y)+0.3'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Bohachevsky N. 2"
+    latex_formula = r"f(x, y)=x^2 + 2y^2 -0.3cos(3\pi x)cos(4\pi y)+0.3"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -448,8 +511,10 @@ class BohachevskyN2:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -464,15 +529,21 @@ class BohachevskyN2:
 
     def __call__(self, X):
         x, y = X
-        res = x**2 + 2*y**2 - 0.3*np.cos(3*np.pi*x) * np.cos(4*np.pi*y) + 0.3
+        res = (
+            x**2
+            + 2 * y**2
+            - 0.3 * np.cos(3 * np.pi * x) * np.cos(4 * np.pi * y)
+            + 0.3
+        )
         return res
 
+
 class BohachevskyN3:
-    name = 'Bohachevsky N. 3'
-    latex_formula = r'f(x, y)=x^2 + 2y^2 -0.3cos(3\pi x + 4\pi y)cos(4\pi y)+0.3'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-50, 50], y \in [-50, 50]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Bohachevsky N. 3"
+    latex_formula = r"f(x, y)=x^2 + 2y^2 -0.3cos(3\pi x + 4\pi y)cos(4\pi y)+0.3"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-50, 50], y \in [-50, 50]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -483,8 +554,10 @@ class BohachevskyN3:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -499,15 +572,21 @@ class BohachevskyN3:
 
     def __call__(self, X):
         x, y = X
-        res = x**2 + 2*y**2 - 0.3*np.cos(3*np.pi*x + 4*np.pi*y) * np.cos(4*np.pi*y) + 0.3
+        res = (
+            x**2
+            + 2 * y**2
+            - 0.3 * np.cos(3 * np.pi * x + 4 * np.pi * y) * np.cos(4 * np.pi * y)
+            + 0.3
+        )
         return res
 
+
 class Booth:
-    name = 'Booth'
-    latex_formula = r'f(x,y)=(x+2y-7)^2+(2x+y-5)^2'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-10, 10], y \in [-10, 10]'
-    latex_formula_global_minimum = r'f(1, 3)=0'
+    name = "Booth"
+    latex_formula = r"f(x,y)=(x+2y-7)^2+(2x+y-5)^2"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-10, 10], y \in [-10, 10]"
+    latex_formula_global_minimum = r"f(1, 3)=0"
     continuous = True
     convex = True
     separable = False
@@ -518,8 +597,10 @@ class Booth:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -534,15 +615,16 @@ class Booth:
 
     def __call__(self, X):
         x, y = X
-        res = (x + 2*y -7) **2 + (2*x + y - 5)**2
+        res = (x + 2 * y - 7) ** 2 + (2 * x + y - 5) ** 2
         return res
 
+
 class Branin:
-    name = 'Branin'
-    latex_formula = r'f(x,y)=a(y - bx^2 + cx - r)^2 + s(1 - t)cos(x) + s'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-5, 10], y \in [0, 15]'
-    latex_formula_global_minimum = r'f(x, y)\approx0.397887, at $$ $$(x, y)=(-\pi, 12.275),$$ $$(x, y)=(\pi, 2.275), and $$ $$(x, y)=(9.42478, 2.475) '
+    name = "Branin"
+    latex_formula = r"f(x,y)=a(y - bx^2 + cx - r)^2 + s(1 - t)cos(x) + s"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-5, 10], y \in [0, 15]"
+    latex_formula_global_minimum = r"f(x, y)\approx0.397887, at $$ $$(x, y)=(-\pi, 12.275),$$ $$(x, y)=(\pi, 2.275), and $$ $$(x, y)=(9.42478, 2.475) "
     continuous = True
     convex = False
     separable = False
@@ -551,13 +633,23 @@ class Branin:
     randomized_term = False
     parametric = False
 
-
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
-    def __init__(self, d, a=1, b=5.1/(4*np.pi**2), c=5/np.pi, r=6, s=10, t=1/(8*np.pi)):
+    def __init__(
+        self,
+        d,
+        a=1,
+        b=5.1 / (4 * np.pi**2),
+        c=5 / np.pi,
+        r=6,
+        s=10,
+        t=1 / (8 * np.pi),
+    ):
         self.d = d
         self.input_domain = np.array([[-5, 10], [0, 15]])
         self.a = a
@@ -568,7 +660,14 @@ class Branin:
         self.t = t
 
     def get_param(self):
-        return { 'a': self.a, 'b': self.b, 'c': self.c, 'r': self.r, 's': self.s, 't': self.t}
+        return {
+            "a": self.a,
+            "b": self.b,
+            "c": self.c,
+            "r": self.r,
+            "s": self.s,
+            "t": self.t,
+        }
 
     def get_global_minimum(self, d):
         X = np.array([[-np.pi, 12.275], [np.pi, 2.275], [9.42478, 2.475]])
@@ -576,16 +675,17 @@ class Branin:
 
     def __call__(self, X):
         x, y = X
-        res = self.a*(y - self.b * x **2 + self.c *x - self.r)**2
-        res = res + self.s*(1-self.t)*np.cos(x) + self.s
+        res = self.a * (y - self.b * x**2 + self.c * x - self.r) ** 2
+        res = res + self.s * (1 - self.t) * np.cos(x) + self.s
         return res
 
+
 class Brent:
-    name = 'Brent'
-    latex_formula = r'f(x, y) = (x + 10)^2 + (y + 10)^2 + exp(-x^2 - y^2)'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-20, 0], y \in [-20, 0]'
-    latex_formula_global_minimum = r'f(-10, -10)=e^{-200}'
+    name = "Brent"
+    latex_formula = r"f(x, y) = (x + 10)^2 + (y + 10)^2 + exp(-x^2 - y^2)"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-20, 0], y \in [-20, 0]"
+    latex_formula_global_minimum = r"f(-10, -10)=e^{-200}"
     continuous = True
     convex = True
     separable = False
@@ -596,8 +696,10 @@ class Brent:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -612,15 +714,18 @@ class Brent:
 
     def __call__(self, X):
         x, y = X
-        res = (x + 10) ** 2 + (y + 10) **2 + np.exp(-x**2 -y**2)
+        res = (x + 10) ** 2 + (y + 10) ** 2 + np.exp(-(x**2) - y**2)
         return res
 
+
 class Brown:
-    name = 'Brown'
-    latex_formula = r'f(\mathbf{x}) = \sum_{i=1}^{d-1}(x_i^2)^{(x_{i+1}^{2}+1)}+(x_{i+1}^2)^{(x_{i}^{2}+1)}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-1, 4], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Brown"
+    latex_formula = r"f(\mathbf{x}) = \sum_{i=1}^{d-1}(x_i^2)^{(x_{i+1}^{2}+1)}+(x_{i+1}^2)^{(x_{i}^{2}+1)}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-1, 4], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = False
@@ -631,8 +736,10 @@ class Brown:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d=None):
         self.input_domain = np.array([[-1, 4] for _ in range(d)])
@@ -646,15 +753,16 @@ class Brown:
 
     def __call__(self, X):
         X, Xp1 = X[:-1], X[1]
-        res = np.sum((X**2)**(Xp1**2 + 1) + (Xp1**2)**(X**2 + 1))
+        res = np.sum((X**2) ** (Xp1**2 + 1) + (Xp1**2) ** (X**2 + 1))
         return res
 
+
 class BukinN6:
-    name = 'Bukin N. 6'
-    latex_formula = r'f(x,y)=100\sqrt{|y-0.01x^2|}+0.01|x+10|'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-15, -5], y \in [-3, 3]'
-    latex_formula_global_minimum = r'f(-10, 1)=0'
+    name = "Bukin N. 6"
+    latex_formula = r"f(x,y)=100\sqrt{|y-0.01x^2|}+0.01|x+10|"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-15, -5], y \in [-3, 3]"
+    latex_formula_global_minimum = r"f(-10, 1)=0"
     continuous = True
     convex = True
     separable = False
@@ -665,8 +773,10 @@ class BukinN6:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -684,12 +794,15 @@ class BukinN6:
         res = 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
         return res
 
+
 class Colville:
-    name = 'Colville'
-    latex_formula = r'f(\mathbf x) = 100(x_{1}^2-x_{2})^2 + (x_{1}-1)^2 + (x_{3} -1)^2  + 90(x_{3}^2-x_{4})^2\\+10.1((x_{2} - 1)^2+ (x_{4}-1)^2) +19.8(x_{2} -1)(x_{4} -1)'
-    latex_formula_dimension = r'd=4'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, 4\rrbracket'
-    latex_formula_global_minimum = r'f(1, 1, 1, 1)=0'
+    name = "Colville"
+    latex_formula = r"f(\mathbf x) = 100(x_{1}^2-x_{2})^2 + (x_{1}-1)^2 + (x_{3} -1)^2  + 90(x_{3}^2-x_{4})^2\\+10.1((x_{2} - 1)^2+ (x_{4}-1)^2) +19.8(x_{2} -1)(x_{4} -1)"
+    latex_formula_dimension = r"d=4"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, 4\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(1, 1, 1, 1)=0"
     continuous = True
     convex = False
     separable = False
@@ -700,8 +813,10 @@ class Colville:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 4
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 4
 
     def __init__(self, d):
         self.d = d
@@ -716,16 +831,24 @@ class Colville:
 
     def __call__(self, X):
         x1, x2, x3, x4 = X
-        res = 100 * (x1**2-x2)**2  + (x1-1)**2 + (x3 -1)**2
-        res = res + 90 * (x3**2-x4)**2 +10.1 * ((x2 - 1)**2 + (x4-1)**2) +19.8 * (x2-1)*(x4 -1)
+        res = 100 * (x1**2 - x2) ** 2 + (x1 - 1) ** 2 + (x3 - 1) ** 2
+        res = (
+            res
+            + 90 * (x3**2 - x4) ** 2
+            + 10.1 * ((x2 - 1) ** 2 + (x4 - 1) ** 2)
+            + 19.8 * (x2 - 1) * (x4 - 1)
+        )
         return res
 
+
 class CrossInTray:
-    name = 'Cross-in-Tray'
-    latex_formula = r'f(x,y)=-0.0001(|sin(x)sin(y)exp(|100-\frac{\sqrt{x^2+y^2}}{\pi}|)|+1)^{0.1}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-10, -10], y \in [-10, -10]'
-    latex_formula_global_minimum = r'f(x, y)\approx-2.06261218, at $$ $$x\pm1.349406685353340, and $$ $$y\pm1.349406608602084'
+    name = "Cross-in-Tray"
+    latex_formula = (
+        r"f(x,y)=-0.0001(|sin(x)sin(y)exp(|100-\frac{\sqrt{x^2+y^2}}{\pi}|)|+1)^{0.1}"
+    )
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-10, -10], y \in [-10, -10]"
+    latex_formula_global_minimum = r"f(x, y)\approx-2.06261218, at $$ $$x\pm1.349406685353340, and $$ $$y\pm1.349406608602084"
     continuous = True
     convex = False
     separable = False
@@ -736,8 +859,10 @@ class CrossInTray:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -747,23 +872,36 @@ class CrossInTray:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([[-1.349406685353340, +1.349406608602084],
-                      [-1.349406685353340, -1.349406608602084],
-                      [+1.349406685353340, +1.349406608602084],
-                      [+1.349406685353340, -1.349406608602084]])
+        X = np.array(
+            [
+                [-1.349406685353340, +1.349406608602084],
+                [-1.349406685353340, -1.349406608602084],
+                [+1.349406685353340, +1.349406608602084],
+                [+1.349406685353340, -1.349406608602084],
+            ]
+        )
         return (X, [self(x) for x in X])
 
     def __call__(self, X):
         x, y = X
-        res = -0.0001*(np.abs(np.sin(x)*np.sin(y)) * np.exp(np.abs(100 - np.sqrt(x**2+y**2)/np.pi))+1)**0.1
+        res = (
+            -0.0001
+            * (
+                np.abs(np.sin(x) * np.sin(y))
+                * np.exp(np.abs(100 - np.sqrt(x**2 + y**2) / np.pi))
+                + 1
+            )
+            ** 0.1
+        )
         return res
 
+
 class DeJongN5:
-    name = 'De Jong N. 5'
-    latex_formula = r'f(x, y)= \left ( 0.002 + \sum_{i=1}^{25} \frac{1}{i+(x - a_{1, i})^6+(x - a_{2, ij})^6}  \right)^{-1}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-65.536, 65.536], y \in [-65.536, 65.536]'
-    latex_formula_global_minimum = r'f(-32, -32)\approx-0.998003838818649'
+    name = "De Jong N. 5"
+    latex_formula = r"f(x, y)= \left ( 0.002 + \sum_{i=1}^{25} \frac{1}{i+(x - a_{1, i})^6+(x - a_{2, ij})^6}  \right)^{-1}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-65.536, 65.536], y \in [-65.536, 65.536]"
+    latex_formula_global_minimum = r"f(-32, -32)\approx-0.998003838818649"
     continuous = True
     convex = False
     separable = False
@@ -774,8 +912,10 @@ class DeJongN5:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d, a=None):
         self.d = d
@@ -787,7 +927,7 @@ class DeJongN5:
             self.a = a
 
     def get_param(self):
-        return {'a': self.a}
+        return {"a": self.a}
 
     def get_global_minimum(self, d):
         X = self.a[0]
@@ -795,14 +935,23 @@ class DeJongN5:
 
     def __call__(self, X):
         x, y = X
-        res = (0.002 + np.sum([1 /((i+1) + (x - a1)**6 +(y - a2)**6) for i, (a1, a2) in enumerate(self.a)]))**-1
+        res = (
+            0.002
+            + np.sum(
+                [
+                    1 / ((i + 1) + (x - a1) ** 6 + (y - a2) ** 6)
+                    for i, (a1, a2) in enumerate(self.a)
+                ]
+            )
+        ) ** -1
         return res
 
+
 class DeckkersAarts:
-    name = 'Deckkers-Aarts'
-    latex_formula = r'f(x, y) = 10^5x^2 + y^2 -(x^2 + y^2)^2 + 10^{-5}(x^2 + y^2)^4'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-20, 20], y \in [-20, 20]'
+    name = "Deckkers-Aarts"
+    latex_formula = r"f(x, y) = 10^5x^2 + y^2 -(x^2 + y^2)^2 + 10^{-5}(x^2 + y^2)^4"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-20, 20], y \in [-20, 20]"
     latex_formula_global_minimum = r"f(0, \pm15)\approx-17320.76671"
     continuous = True
     convex = False
@@ -814,8 +963,10 @@ class DeckkersAarts:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -830,15 +981,20 @@ class DeckkersAarts:
 
     def __call__(self, X):
         x, y = X
-        res = 1e5*x**2 + y**2 - (x**2+y**2) + 1e-5 *(x**2+y**2)**4
+        res = 1e5 * x**2 + y**2 - (x**2 + y**2) + 1e-5 * (x**2 + y**2) ** 4
         return res
 
+
 class DixonPrice:
-    name = 'Dixon Price'
-    latex_formula = r'f(\mathbf x) = (x_1 - 1)^2 + \sum_{i=2}^d i(2x_i^2 - x_{i-1})^2'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(\mathbf x) = 0\text{, at }x_i = 2^{-\frac{2^i-2}{2^i}}'
+    name = "Dixon Price"
+    latex_formula = r"f(\mathbf x) = (x_1 - 1)^2 + \sum_{i=2}^d i(2x_i^2 - x_{i-1})^2"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = (
+        r"f(\mathbf x) = 0\text{, at }x_i = 2^{-\frac{2^i-2}{2^i}}"
+    )
     continuous = True
     convex = True
     separable = False
@@ -849,8 +1005,10 @@ class DixonPrice:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -860,20 +1018,25 @@ class DixonPrice:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([2 ** (-((2 ** i) - 2) / 2**i) for i in range(1, d + 1)])
+        X = np.array([2 ** (-((2**i) - 2) / 2**i) for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        res = (X[0] - 1) **2 + np.sum([(i+1) * (2*X[i]**2 - X[i-1])**2 for i in range(1, d)])
+        res = (X[0] - 1) ** 2 + np.sum(
+            [(i + 1) * (2 * X[i] ** 2 - X[i - 1]) ** 2 for i in range(1, d)]
+        )
         return res
 
+
 class DropWave:
-    name = 'Drop-Wave'
-    latex_formula = r'f(x, y) = - \frac{1 + cos(12\sqrt{x^{2} + y^{2}})}{(0.5(x^{2} + y^{2}) + 2)}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-5.2, 5.2], y \in [-5.2, 5.2]'
-    latex_formula_global_minimum = r'f(0, 0)=-1'
+    name = "Drop-Wave"
+    latex_formula = (
+        r"f(x, y) = - \frac{1 + cos(12\sqrt{x^{2} + y^{2}})}{(0.5(x^{2} + y^{2}) + 2)}"
+    )
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-5.2, 5.2], y \in [-5.2, 5.2]"
+    latex_formula_global_minimum = r"f(0, 0)=-1"
     continuous = True
     convex = False
     separable = False
@@ -884,8 +1047,10 @@ class DropWave:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -900,15 +1065,18 @@ class DropWave:
 
     def __call__(self, X):
         x, y = X
-        res = - (1 + np.cos(12*np.sqrt(x**2 + y**2)))/ (0.5*(x**2 + y**2) + 2)
+        res = -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (
+            0.5 * (x**2 + y**2) + 2
+        )
         return res
 
+
 class Easom:
-    name = 'Easom'
-    latex_formula = r'f(x,y)=-cos(x)cos(y) exp(-(x - \pi)^2-(y - \pi)^2)'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(\pi, \pi)=-1'
+    name = "Easom"
+    latex_formula = r"f(x,y)=-cos(x)cos(y) exp(-(x - \pi)^2-(y - \pi)^2)"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(\pi, \pi)=-1"
     continuous = True
     convex = False
     separable = True
@@ -919,8 +1087,10 @@ class Easom:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -935,15 +1105,16 @@ class Easom:
 
     def __call__(self, X):
         x, y = X
-        res = - np.cos(x)*np.cos(y)*np.exp(-(x-np.pi)**2-(y-np.pi)**2)
+        res = -np.cos(x) * np.cos(y) * np.exp(-((x - np.pi) ** 2) - (y - np.pi) ** 2)
         return res
 
+
 class EggCrate:
-    name = 'Egg Crate'
-    latex_formula = r'f(x,y)=x^2 + y^2 + 25(sin^2(x) + sin^2(y))'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-5, 5], y \in [-5, 5]'
-    latex_formula_global_minimum = r'f(0, 0)=-1'
+    name = "Egg Crate"
+    latex_formula = r"f(x,y)=x^2 + y^2 + 25(sin^2(x) + sin^2(y))"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-5, 5], y \in [-5, 5]"
+    latex_formula_global_minimum = r"f(0, 0)=-1"
     continuous = True
     convex = False
     separable = True
@@ -954,8 +1125,10 @@ class EggCrate:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -970,15 +1143,16 @@ class EggCrate:
 
     def __call__(self, X):
         x, y = X
-        res = x ** 2 + y ** 2 + 25 * (np.sin(x) ** 2 + np.sin(y)**2)
+        res = x**2 + y**2 + 25 * (np.sin(x) ** 2 + np.sin(y) ** 2)
         return res
 
+
 class EggHolder:
-    name = 'Egg Holder'
-    latex_formula = r'f(x, y) = -(y + 47) sin \left ( \sqrt{| y + 0.5y +47 |} \right ) - x sin \left ( \sqrt{| x - (y + 47)|} \right )'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-512, 512], y \in [-512, 512]'
-    latex_formula_global_minimum = r'f(512, 404.2319)=-1'
+    name = "Egg Holder"
+    latex_formula = r"f(x, y) = -(y + 47) sin \left ( \sqrt{| y + 0.5y +47 |} \right ) - x sin \left ( \sqrt{| x - (y + 47)|} \right )"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-512, 512], y \in [-512, 512]"
+    latex_formula_global_minimum = r"f(512, 404.2319)=-1"
     continuous = False
     convex = False
     separable = False
@@ -989,8 +1163,10 @@ class EggHolder:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1005,15 +1181,20 @@ class EggHolder:
 
     def __call__(self, X):
         x, y = X
-        res = -(y + 47) * np.sin(np.sqrt(np.abs(y + x/2 + 47))) - x * np.sin(np.sqrt(np.abs(x - y - 47)))
+        res = -(y + 47) * np.sin(np.sqrt(np.abs(y + x / 2 + 47))) - x * np.sin(
+            np.sqrt(np.abs(x - y - 47))
+        )
         return res
 
+
 class Exponential:
-    name = 'Exponential'
-    latex_formula = r'f(\mathbf{x})=-exp(-0.5\sum_{i=1}^d{x_i^2})'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-1, 1], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0) = -1'
+    name = "Exponential"
+    latex_formula = r"f(\mathbf{x})=-exp(-0.5\sum_{i=1}^d{x_i^2})"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-1, 1], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0) = -1"
     continuous = True
     convex = True
     separable = True
@@ -1024,8 +1205,10 @@ class Exponential:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1040,15 +1223,16 @@ class Exponential:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = - np.exp(-0.5*np.sum(X**2))
+        res = -np.exp(-0.5 * np.sum(X**2))
         return res
 
+
 class Forrester:
-    name = 'Forrester'
-    latex_formula = r'f(x)=(6x-2)^2sin(12x-4)'
-    latex_formula_dimension = r'd=1'
-    latex_formula_input_domain = r'x \in [0, 1]'
-    latex_formula_global_minimum = r'f(0.757249) \approx -6.02074'
+    name = "Forrester"
+    latex_formula = r"f(x)=(6x-2)^2sin(12x-4)"
+    latex_formula_dimension = r"d=1"
+    latex_formula_input_domain = r"x \in [0, 1]"
+    latex_formula_global_minimum = r"f(0.757249) \approx -6.02074"
     continuous = True
     convex = False
     separable = False
@@ -1059,8 +1243,10 @@ class Forrester:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d==1
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 1
 
     def __init__(self, d):
         self.d = d
@@ -1075,15 +1261,16 @@ class Forrester:
 
     def __call__(self, X):
         x = X[0]
-        res = ((6 *x - 2)**2)*np.sin(12*x -4)
+        res = ((6 * x - 2) ** 2) * np.sin(12 * x - 4)
         return res
 
+
 class GoldsteinPrice:
-    name = 'Goldstein-Price'
-    latex_formula = r'f(x,y)=[1 + (x + y + 1)^2(19 - 14x+3x^2- 14y + 6xy + 3y^2)]\\ \cdot [30 + (2x - 3y)^2(18 - 32x + 12x^2 + 4y - 36xy + 27y^2)]'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-2, 2], y \in [-2, 2]'
-    latex_formula_global_minimum = r'f(0, -1)=3'
+    name = "Goldstein-Price"
+    latex_formula = r"f(x,y)=[1 + (x + y + 1)^2(19 - 14x+3x^2- 14y + 6xy + 3y^2)]\\ \cdot [30 + (2x - 3y)^2(18 - 32x + 12x^2 + 4y - 36xy + 27y^2)]"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-2, 2], y \in [-2, 2]"
+    latex_formula_global_minimum = r"f(0, -1)=3"
     continuous = False
     convex = False
     separable = False
@@ -1094,8 +1281,10 @@ class GoldsteinPrice:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1110,16 +1299,21 @@ class GoldsteinPrice:
 
     def __call__(self, X):
         x, y = X
-        res = (1 + (x + y + 1)**2*(19 - 14*x+3*x**2- 14*y + 6*x*y + 3*y**2))
-        res *= (30 + (2*x - 3*y)**2*(18 - 32*x + 12*x**2 + 48*y - 36*x*y + 27*y**2))
+        res = 1 + (x + y + 1) ** 2 * (
+            19 - 14 * x + 3 * x**2 - 14 * y + 6 * x * y + 3 * y**2
+        )
+        res *= 30 + (2 * x - 3 * y) ** 2 * (
+            18 - 32 * x + 12 * x**2 + 48 * y - 36 * x * y + 27 * y**2
+        )
         return res
 
+
 class GramacyLee:
-    name = 'Gramacy & Lee'
-    latex_formula = r'f(x) = \frac{sin(10\pi x)}{2x} + (x-1)^4'
-    latex_formula_dimension = r'd=1'
-    latex_formula_input_domain = r'x \in [-0.5, 2.5]'
-    latex_formula_global_minimum = r'f(0.548563444114526) \approx -0.869011134989500'
+    name = "Gramacy & Lee"
+    latex_formula = r"f(x) = \frac{sin(10\pi x)}{2x} + (x-1)^4"
+    latex_formula_dimension = r"d=1"
+    latex_formula_input_domain = r"x \in [-0.5, 2.5]"
+    latex_formula_global_minimum = r"f(0.548563444114526) \approx -0.869011134989500"
     continuous = True
     convex = False
     separable = False
@@ -1130,8 +1324,10 @@ class GramacyLee:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d==1
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 1
 
     def __init__(self, d):
         self.d = d
@@ -1146,15 +1342,18 @@ class GramacyLee:
 
     def __call__(self, X):
         x = X[0]
-        res = np.sin(10*np.pi*x)/2/x + (x - 1)**4
+        res = np.sin(10 * np.pi * x) / 2 / x + (x - 1) ** 4
         return res
 
+
 class Griewank:
-    name = 'Griewank'
-    latex_formula = r'f(\mathbf{x}) = 1 + \sum_{i=1}^{d} \frac{x_i^{2}}{4000} - \prod_{i=1}^{d}cos(\frac{x_i}{\sqrt{i}})'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-600, 600], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0) = 0'
+    name = "Griewank"
+    latex_formula = r"f(\mathbf{x}) = 1 + \sum_{i=1}^{d} \frac{x_i^{2}}{4000} - \prod_{i=1}^{d}cos(\frac{x_i}{\sqrt{i}})"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-600, 600], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0) = 0"
     continuous = True
     convex = False
     separable = True
@@ -1165,8 +1364,10 @@ class Griewank:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1181,16 +1382,19 @@ class Griewank:
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d+1)
-        res = 1 + np.sum(X**2/4000) - np.prod(np.cos(X/np.sqrt(i)))
+        i = np.arange(1, d + 1)
+        res = 1 + np.sum(X**2 / 4000) - np.prod(np.cos(X / np.sqrt(i)))
         return res
 
+
 class HappyCat:
-    name = 'Happy Cat'
-    latex_formula = r'f(\mathbf{x})=\left[\left(||\mathbf{x}||^2 - d\right)^2\right]^\alpha + \frac{1}{d}\left(\frac{1}{2}||\mathbf{x}||^2+\sum_{i=1}^{d}x_i\right)+\frac{1}{2}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-2, 2], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(-1, ..., -1) = 0'
+    name = "Happy Cat"
+    latex_formula = r"f(\mathbf{x})=\left[\left(||\mathbf{x}||^2 - d\right)^2\right]^\alpha + \frac{1}{d}\left(\frac{1}{2}||\mathbf{x}||^2+\sum_{i=1}^{d}x_i\right)+\frac{1}{2}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-2, 2], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(-1, ..., -1) = 0"
     continuous = True
     convex = False
     separable = False
@@ -1201,8 +1405,10 @@ class HappyCat:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, alpha=0.5):
         self.d = d
@@ -1210,7 +1416,7 @@ class HappyCat:
         self.alpha = alpha
 
     def get_param(self):
-        return {'alpha': self.alpha}
+        return {"alpha": self.alpha}
 
     def get_global_minimum(self, d):
         X = np.array([-1 for _ in range(d)])
@@ -1219,15 +1425,16 @@ class HappyCat:
     def __call__(self, X):
         d = X.shape[0]
         norm = np.sum(X**2)
-        res = ((norm - d)**2)**self.alpha + (1/d) * (0.5*norm + np.sum(X)) + 0.5
+        res = ((norm - d) ** 2) ** self.alpha + (1 / d) * (0.5 * norm + np.sum(X)) + 0.5
         return res
 
+
 class Himmelblau:
-    name = 'Himmelblau'
-    latex_formula = r'f(x, y) = (x^{2} + y - 11)^{2} + (x + y^{2} - 7)^{2}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-6, 6], y \in [-6, 6]'
-    latex_formula_global_minimum = r'f(3,2)=0$$$$f(-2.805118,3.283186)\approx0$$$$f(-3.779310,-3.283186)\approx0$$$$f(3.584458,-1.848126)\approx0'
+    name = "Himmelblau"
+    latex_formula = r"f(x, y) = (x^{2} + y - 11)^{2} + (x + y^{2} - 7)^{2}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-6, 6], y \in [-6, 6]"
+    latex_formula_global_minimum = r"f(3,2)=0$$$$f(-2.805118,3.283186)\approx0$$$$f(-3.779310,-3.283186)\approx0$$$$f(3.584458,-1.848126)\approx0"
     continuous = True
     convex = False
     separable = False
@@ -1238,8 +1445,10 @@ class Himmelblau:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1249,23 +1458,28 @@ class Himmelblau:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([[3,2],
-                      [-2.805118,3.283186],
-                      [-3.779310,-3.283186],
-                      [3.584458,-1.848126]])
+        X = np.array(
+            [
+                [3, 2],
+                [-2.805118, 3.283186],
+                [-3.779310, -3.283186],
+                [3.584458, -1.848126],
+            ]
+        )
         return (X, [self(x) for x in X])
 
     def __call__(self, X):
         x, y = X
-        res = (x**2 + y - 11)**2 + (x + y**2 - 7)**2
+        res = (x**2 + y - 11) ** 2 + (x + y**2 - 7) ** 2
         return res
 
+
 class HolderTable:
-    name = 'Holder-Table'
-    latex_formula = r'f(x,y)=-|sin(x)cos(y)exp(|1-\frac{\sqrt{x^2+y^2}}{\pi}|)|'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-10, 10], y \in [-10, 10]'
-    latex_formula_global_minimum = r'f(\pm8.05502, \pm9.66459)\approx-19.2085'
+    name = "Holder-Table"
+    latex_formula = r"f(x,y)=-|sin(x)cos(y)exp(|1-\frac{\sqrt{x^2+y^2}}{\pi}|)|"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-10, 10], y \in [-10, 10]"
+    latex_formula_global_minimum = r"f(\pm8.05502, \pm9.66459)\approx-19.2085"
     continuous = True
     convex = False
     separable = False
@@ -1276,8 +1490,10 @@ class HolderTable:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1287,23 +1503,30 @@ class HolderTable:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([[-8.05502,  9.66459],
-                      [-8.05502, -9.66459],
-                      [ 8.05502,  9.66459],
-                      [ 8.05502, -9.66459]])
+        X = np.array(
+            [
+                [-8.05502, 9.66459],
+                [-8.05502, -9.66459],
+                [8.05502, 9.66459],
+                [8.05502, -9.66459],
+            ]
+        )
         return (X, [self(x) for x in X])
 
     def __call__(self, X):
         x, y = X
-        res = -np.abs(np.sin(x)*np.cos(y)*np.exp(np.abs(1 - np.sqrt(x**2+y**2)/np.pi)))
+        res = -np.abs(
+            np.sin(x) * np.cos(y) * np.exp(np.abs(1 - np.sqrt(x**2 + y**2) / np.pi))
+        )
         return res
 
+
 class Keane:
-    name = 'Keane'
-    latex_formula = r'f(x,y)=-\frac{\sin^2(x-y)\sin^2(x+y)}{\sqrt{x^2+y^2}}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-10, 10], y \in [-10, 10]'
-    latex_formula_global_minimum = r'f(1.393249070031784,0)\approx0.673667521146855 $$$$f(0,1.393249070031784)\approx0.673667521146855'
+    name = "Keane"
+    latex_formula = r"f(x,y)=-\frac{\sin^2(x-y)\sin^2(x+y)}{\sqrt{x^2+y^2}}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-10, 10], y \in [-10, 10]"
+    latex_formula_global_minimum = r"f(1.393249070031784,0)\approx0.673667521146855 $$$$f(0,1.393249070031784)\approx0.673667521146855"
     continuous = True
     convex = False
     separable = False
@@ -1314,8 +1537,10 @@ class Keane:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1325,21 +1550,23 @@ class Keane:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([[1.393249070031784,0],
-                      [0,1.393249070031784]])
+        X = np.array([[1.393249070031784, 0], [0, 1.393249070031784]])
         return (X, [self(x) for x in X])
 
     def __call__(self, X):
         x, y = X
-        res = -(np.sin(x-y)**2 * np.sin(x+y)**2)/np.sqrt(x**2+y**2)
+        res = -(np.sin(x - y) ** 2 * np.sin(x + y) ** 2) / np.sqrt(x**2 + y**2)
         return res
 
+
 class Langermann:
-    name = 'Langermann'
-    latex_formula = r'f(\mathbf x) = \sum_{i=1}^{m}c_iexp\left( -\frac{1}{\pi}\sum_{j=1}^{d}(x_j - A_{ij})^2\right)cos\left( \pi\sum_{j=1}^{d}(x_j - A_{ij})^2\right)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [0, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'\text{Not found...}'
+    name = "Langermann"
+    latex_formula = r"f(\mathbf x) = \sum_{i=1}^{m}c_iexp\left( -\frac{1}{\pi}\sum_{j=1}^{d}(x_j - A_{ij})^2\right)cos\left( \pi\sum_{j=1}^{d}(x_j - A_{ij})^2\right)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [0, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"\text{Not found...}"
     continuous = True
     convex = False
     separable = False
@@ -1350,18 +1577,22 @@ class Langermann:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, m=None, c=None, A=None):
         self.d = d
         self.input_domain = np.array([[0, 10] for _ in range(d)])
         self.m = m if m is not None else 5
         self.c = c if c is not None else np.array([1, 2, 5, 2, 3])
-        self.A = A if A is not None else np.array([[3, 5], [5, 2], [2, 1], [1, 4], [7, 9]])
+        self.A = (
+            A if A is not None else np.array([[3, 5], [5, 2], [2, 1], [1, 4], [7, 9]])
+        )
 
     def get_param(self):
-        return {'m': self.m, 'c': self.c, 'A': self.A}
+        return {"m": self.m, "c": self.c, "A": self.A}
 
     def get_global_minimum(self, d):
         X = np.array([0 for _ in range(d)])
@@ -1369,15 +1600,23 @@ class Langermann:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum([self.c[i] * np.exp(-1/np.pi *np.sum((X-self.A[i])**2)) * np.cos(np.pi *np.sum((X-self.A[i])**2)) for i in range(self.m)])
+        res = np.sum(
+            [
+                self.c[i]
+                * np.exp(-1 / np.pi * np.sum((X - self.A[i]) ** 2))
+                * np.cos(np.pi * np.sum((X - self.A[i]) ** 2))
+                for i in range(self.m)
+            ]
+        )
         return res
 
+
 class Leon:
-    name = 'Leon'
-    latex_formula = r'f(x, y) = 100(y - x^{3})^2 + (1 - x)^2'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [0, 10], y \in [0, 10]'
-    latex_formula_global_minimum = r'f(1, 1)=0'
+    name = "Leon"
+    latex_formula = r"f(x, y) = 100(y - x^{3})^2 + (1 - x)^2"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [0, 10], y \in [0, 10]"
+    latex_formula_global_minimum = r"f(1, 1)=0"
     continuous = True
     convex = False
     separable = False
@@ -1388,8 +1627,10 @@ class Leon:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1404,15 +1645,18 @@ class Leon:
 
     def __call__(self, X):
         x, y = X
-        res = 100 * (y - x**3)**2 + (1 - x)**2
+        res = 100 * (y - x**3) ** 2 + (1 - x) ** 2
         return res
 
+
 class LevyN13:
-    name = 'Levy N. 13'
-    latex_formula = r'f(x, y) = sin^2(3\pi x)+(x-1)^2(1+sin^2(3\pi y))+(y-1)^2(1+sin^2(2\pi y))'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-10, 10], y \in [-10, 10]'
-    latex_formula_global_minimum = r'f(1, 1)=0'
+    name = "Levy N. 13"
+    latex_formula = (
+        r"f(x, y) = sin^2(3\pi x)+(x-1)^2(1+sin^2(3\pi y))+(y-1)^2(1+sin^2(2\pi y))"
+    )
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-10, 10], y \in [-10, 10]"
+    latex_formula_global_minimum = r"f(1, 1)=0"
     continuous = True
     convex = False
     separable = False
@@ -1423,8 +1667,10 @@ class LevyN13:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1439,15 +1685,20 @@ class LevyN13:
 
     def __call__(self, X):
         x, y = X
-        res = np.sin(3*np.pi*x)**2 + (x-1)**2*(1 + np.sin(3*np.pi*y)**2) + (y-1)**2*(1 + np.sin(2*np.pi*y)**2)
+        res = (
+            np.sin(3 * np.pi * x) ** 2
+            + (x - 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
+            + (y - 1) ** 2 * (1 + np.sin(2 * np.pi * y) ** 2)
+        )
         return res
 
+
 class Matyas:
-    name = 'Matyas'
-    latex_formula = r'f(x, y)=0.26(x^2+y^2) -0.48xy'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-10, 10], y \in [-10, 10]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Matyas"
+    latex_formula = r"f(x, y)=0.26(x^2+y^2) -0.48xy"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-10, 10], y \in [-10, 10]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = True
     separable = False
@@ -1458,8 +1709,10 @@ class Matyas:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1474,15 +1727,16 @@ class Matyas:
 
     def __call__(self, X):
         x, y = X
-        res = 0.26*(x**2+y**2)-0.48*x*y
+        res = 0.26 * (x**2 + y**2) - 0.48 * x * y
         return res
 
+
 class McCormick:
-    name = 'McCormick'
-    latex_formula = r'f(x, y)=sin(x + y) + (x - y) ^2 - 1.5x + 2.5 y + 1'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-1.5, 4], y \in [-3, 3]'
-    latex_formula_global_minimum = r'f(-0.547,-1.547)\approx=-1.9133'
+    name = "McCormick"
+    latex_formula = r"f(x, y)=sin(x + y) + (x - y) ^2 - 1.5x + 2.5 y + 1"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-1.5, 4], y \in [-3, 3]"
+    latex_formula_global_minimum = r"f(-0.547,-1.547)\approx=-1.9133"
     continuous = True
     convex = True
     separable = False
@@ -1493,8 +1747,10 @@ class McCormick:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1504,20 +1760,23 @@ class McCormick:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([-0.547,-1.547])
+        X = np.array([-0.547, -1.547])
         return (X, self(X))
 
     def __call__(self, X):
         x, y = X
-        res = np.sin(x+y) + (x-y)**2 - 1.5*x +2.5*y +1
+        res = np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
         return res
 
+
 class Michalewicz:
-    name = 'Michalewicz'
-    latex_formula = r'f(\mathbf x) = - \sum_{i=1}^{d}sin(x_i)sin\left(\frac{ix_i^2}{\pi}\right)^{2m}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [0, \pi], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'\text{at $d=2$, }f(2.20, 1.57) \approx -1.8013'
+    name = "Michalewicz"
+    latex_formula = r"f(\mathbf x) = - \sum_{i=1}^{d}sin(x_i)sin\left(\frac{ix_i^2}{\pi}\right)^{2m}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [0, \pi], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"\text{at $d=2$, }f(2.20, 1.57) \approx -1.8013"
     continuous = True
     convex = False
     separable = True
@@ -1528,8 +1787,10 @@ class Michalewicz:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, m=10):
         self.d = d
@@ -1537,25 +1798,30 @@ class Michalewicz:
         self.m = m
 
     def get_param(self):
-        return {'m': self.m}
+        return {"m": self.m}
 
     def get_global_minimum(self, d):
-        assert d==2, 'Michalewicz minimum is only given for d=2'
+        assert d == 2, "Michalewicz minimum is only given for d=2"
         X = np.array([2.20, 1.57])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d+1)
-        res = -np.sum(np.sin(X)*np.sin(i*X**2/np.pi)**(2*self.m))
+        i = np.arange(1, d + 1)
+        res = -np.sum(np.sin(X) * np.sin(i * X**2 / np.pi) ** (2 * self.m))
         return res
 
+
 class Periodic:
-    name = 'Periodic'
-    latex_formula = r'f(\mathbf{x})= 1 + \sum_{i=1}^{d}{sin^2(x_i)}-0.1exp(-\sum_{i=1}^{d}x_i^2)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'\text{at $d=2$, }f(0, ..., 0) =0.9'
+    name = "Periodic"
+    latex_formula = (
+        r"f(\mathbf{x})= 1 + \sum_{i=1}^{d}{sin^2(x_i)}-0.1exp(-\sum_{i=1}^{d}x_i^2)"
+    )
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"\text{at $d=2$, }f(0, ..., 0) =0.9"
     continuous = True
     convex = False
     separable = False
@@ -1566,8 +1832,10 @@ class Periodic:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1582,15 +1850,18 @@ class Periodic:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = 1 + np.sum(np.sin(X)**2) - 0.1*np.exp(-np.sum(X**2))
+        res = 1 + np.sum(np.sin(X) ** 2) - 0.1 * np.exp(-np.sum(X**2))
         return res
 
+
 class PermZeroDBeta:
-    name = 'Perm 0, d, beta'
-    latex_formula = r'f(\bold{x}) = \sum_{i=1}^{d} \left ( \sum_{j=1}^{d}(j + \beta) \left ( x_{j}^{i} - \frac{1}{j^{i}}\right )  \right )^2'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-d, d], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f((1, \frac{1}{2}, ..., \frac{1}{d})) = 0'
+    name = "Perm 0, d, beta"
+    latex_formula = r"f(\bold{x}) = \sum_{i=1}^{d} \left ( \sum_{j=1}^{d}(j + \beta) \left ( x_{j}^{i} - \frac{1}{j^{i}}\right )  \right )^2"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-d, d], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f((1, \frac{1}{2}, ..., \frac{1}{d})) = 0"
     continuous = True
     convex = True
     separable = False
@@ -1601,8 +1872,10 @@ class PermZeroDBeta:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, beta=10):
         self.d = d
@@ -1610,29 +1883,32 @@ class PermZeroDBeta:
         self.beta = beta
 
     def get_param(self):
-        return {'beta': self.beta}
+        return {"beta": self.beta}
 
     def get_global_minimum(self, d):
         X = np.array([1 / (i + 1) for i in range(d)])
         return (X, self(X))
 
     def __call__(self, X):
-            d = X.shape[0]
-            j = np.arange(1, d + 1)
-            res = np.sum(
-                [
-                    np.sum((j + self.beta) * (X**i - (1 / j) ** i)) ** 2
-                    for i in range(1, d + 1)
-                ]
-            )
-            return res
+        d = X.shape[0]
+        j = np.arange(1, d + 1)
+        res = np.sum(
+            [
+                np.sum((j + self.beta) * (X**i - (1 / j) ** i)) ** 2
+                for i in range(1, d + 1)
+            ]
+        )
+        return res
+
 
 class PermDBeta:
-    name = 'Perm d, beta'
-    latex_formula = r'f(\bold{x}) = \sum_{i=1}^{d} \left ( \sum_{j=1}^{d}(j^i + \beta) \left( \left( \frac{x_{j}}{j}\right )^{i} - 1 \right )  \right )^2'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-d, d], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(1, 2, ..., d) = 0'
+    name = "Perm d, beta"
+    latex_formula = r"f(\bold{x}) = \sum_{i=1}^{d} \left ( \sum_{j=1}^{d}(j^i + \beta) \left( \left( \frac{x_{j}}{j}\right )^{i} - 1 \right )  \right )^2"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-d, d], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(1, 2, ..., d) = 0"
     continuous = True
     convex = False
     separable = False
@@ -1643,8 +1919,10 @@ class PermDBeta:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, beta=0.5):
         self.d = d
@@ -1652,7 +1930,7 @@ class PermDBeta:
         self.beta = beta
 
     def get_param(self):
-        return {'beta': self.beta}
+        return {"beta": self.beta}
 
     def get_global_minimum(self):
         d = self.d
@@ -1661,16 +1939,24 @@ class PermDBeta:
 
     def __call__(self, X):
         d = X.shape[0]
-        j = np.arange(1, d+1)
-        res = np.sum([np.sum((j**i + self.beta) *((X/j)**i - 1))**2  for i in range(1, d+1)])
+        j = np.arange(1, d + 1)
+        res = np.sum(
+            [
+                np.sum((j**i + self.beta) * ((X / j) ** i - 1)) ** 2
+                for i in range(1, d + 1)
+            ]
+        )
         return res
 
+
 class Powell:
-    name = 'Powell'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}|x_i|^{i+1}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-1, 1], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0) =0'
+    name = "Powell"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}|x_i|^{i+1}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-1, 1], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0) =0"
     continuous = True
     convex = True
     separable = True
@@ -1681,8 +1967,10 @@ class Powell:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1697,15 +1985,18 @@ class Powell:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.abs(X) ** np.arange(2, d+2))
+        res = np.sum(np.abs(X) ** np.arange(2, d + 2))
         return res
 
+
 class Qing:
-    name = 'Qing'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}(x^2-i)^2'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-500, 500], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(\pmi, ..., \pmi) =0'
+    name = "Qing"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}(x^2-i)^2"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-500, 500], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(\pmi, ..., \pmi) =0"
     continuous = True
     convex = False
     separable = True
@@ -1716,8 +2007,10 @@ class Qing:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1741,15 +2034,18 @@ class Qing:
 
         res = 0
         for i in range(d):
-            res = res + np.power( X1[i] - (i + 1), 2 )
+            res = res + np.power(X1[i] - (i + 1), 2)
         return res
 
+
 class Quartic:
-    name = 'Quartic'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{n}ix_i^4+\text{random}[0,1)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-1.28, 1.28], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0) = 0 + \text{random noise}'
+    name = "Quartic"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{n}ix_i^4+\text{random}[0,1)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-1.28, 1.28], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0) = 0 + \text{random noise}"
     continuous = True
     convex = False
     separable = True
@@ -1760,8 +2056,10 @@ class Quartic:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1776,15 +2074,18 @@ class Quartic:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.arange(1, d+1)*X**4) + np.random.random()
+        res = np.sum(np.arange(1, d + 1) * X**4) + np.random.random()
         return res
 
+
 class Rastrigin:
-    name = 'Rastrigin'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}(x_i^2 - 10cos(2\pi x_i))'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5.12, 5.12], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0) = 0'
+    name = "Rastrigin"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}(x_i^2 - 10cos(2\pi x_i))"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5.12, 5.12], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0) = 0"
     continuous = True
     convex = False
     separable = True
@@ -1795,8 +2096,10 @@ class Rastrigin:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -1811,15 +2114,18 @@ class Rastrigin:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = 10*d + np.sum(X**2 - 10 * np.cos(2*np.pi*X))
+        res = 10 * d + np.sum(X**2 - 10 * np.cos(2 * np.pi * X))
         return res
 
+
 class Ridge:
-    name = 'Ridge'
-    latex_formula = r'f(\mathbf{x})=x_1 + \beta\left(\sum_{i=2}^{d}x_i^2\right)^\alpha'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5, 5], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'\text{On the hypercube } [-\gamma, \gamma]^d,$$$$ f(-\gamma, 0, 0..., 0)=-\gamma '
+    name = "Ridge"
+    latex_formula = r"f(\mathbf{x})=x_1 + \beta\left(\sum_{i=2}^{d}x_i^2\right)^\alpha"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5, 5], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"\text{On the hypercube } [-\gamma, \gamma]^d,$$$$ f(-\gamma, 0, 0..., 0)=-\gamma "
     continuous = True
     convex = False
     separable = False
@@ -1830,8 +2136,10 @@ class Ridge:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, beta=2, alpha=0.1):
         self.d = d
@@ -1840,7 +2148,7 @@ class Ridge:
         self.alpha = alpha
 
     def get_param(self):
-        return {'beta': self.beta, 'alpha': self.alpha}
+        return {"beta": self.beta, "alpha": self.alpha}
 
     def get_global_minimum(self, d):
         X = np.array([0 for _ in range(d)])
@@ -1849,15 +2157,20 @@ class Ridge:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = X[0] + self.beta * np.sum(X[1:]**2)**self.alpha
+        res = X[0] + self.beta * np.sum(X[1:] ** 2) ** self.alpha
         return res
 
+
 class Rosenbrock:
-    name = 'Rosenbrock'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d-1}[b (x_{i+1} - x_i^2)^ 2 + (a - x_i)^2]'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(1, ..., 1)=0'
+    name = "Rosenbrock"
+    latex_formula = (
+        r"f(\mathbf{x})=\sum_{i=1}^{d-1}[b (x_{i+1} - x_i^2)^ 2 + (a - x_i)^2]"
+    )
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(1, ..., 1)=0"
     continuous = True
     convex = False
     separable = False
@@ -1868,8 +2181,10 @@ class Rosenbrock:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, a=1, b=100):
         self.d = d
@@ -1878,7 +2193,7 @@ class Rosenbrock:
         self.b = b
 
     def get_param(self):
-        return {'a': self.a, 'b': self.b}
+        return {"a": self.a, "b": self.b}
 
     def get_global_minimum(self, d):
         X = np.array([1 for _ in range(d)])
@@ -1886,15 +2201,20 @@ class Rosenbrock:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.abs(self.b*(X[1:] - X[:-1]**2)**2 + (self.a - X[:-1])**2))
+        res = np.sum(
+            np.abs(self.b * (X[1:] - X[:-1] ** 2) ** 2 + (self.a - X[:-1]) ** 2)
+        )
         return res
 
+
 class RotatedHyperEllipsoid:
-    name = 'Rotated Hyper-Ellipsoid'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}\sum_{j=1}^{i}x_j^2'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-65.536, 65.536], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Rotated Hyper-Ellipsoid"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}\sum_{j=1}^{i}x_j^2"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-65.536, 65.536], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = False
@@ -1905,10 +2225,15 @@ class RotatedHyperEllipsoid:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-65.536, 65.536] for _ in range(d)])
 
@@ -1921,15 +2246,18 @@ class RotatedHyperEllipsoid:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum([np.sum(X[:i+1]**2) for i in range(d)])
+        res = np.sum([np.sum(X[: i + 1] ** 2) for i in range(d)])
         return res
 
+
 class Salomon:
-    name = 'Salomon'
-    latex_formula = r'f(\mathbf{x})=1-cos(2\pi\sqrt{\sum_{i=1}^{d}x_i^2})+0.1\sqrt{\sum_{i=1}^{d}x_i^2}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Salomon"
+    latex_formula = r"f(\mathbf{x})=1-cos(2\pi\sqrt{\sum_{i=1}^{d}x_i^2})+0.1\sqrt{\sum_{i=1}^{d}x_i^2}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -1940,10 +2268,15 @@ class Salomon:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-100, 100] for _ in range(d)])
 
@@ -1960,12 +2293,13 @@ class Salomon:
         res = res + 0.1 * np.sqrt(np.sum(X**2))
         return res
 
+
 class SchafferN1:
-    name = 'Schaffer N. 1'
-    latex_formula = r'f(x, y)=0.5 + \frac{sin^2(x^2+y^2)^2-0.5}{(1+0.001(x^2+y^2))^2}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Schaffer N. 1"
+    latex_formula = r"f(x, y)=0.5 + \frac{sin^2(x^2+y^2)^2-0.5}{(1+0.001(x^2+y^2))^2}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -1976,8 +2310,10 @@ class SchafferN1:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -1992,15 +2328,20 @@ class SchafferN1:
 
     def __call__(self, X):
         x, y = X
-        res = 0.5 + (np.sin((x**2 + y**2)**2)**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
+        res = (
+            0.5
+            + (np.sin((x**2 + y**2) ** 2) ** 2 - 0.5)
+            / (1 + 0.001 * (x**2 + y**2)) ** 2
+        )
         return res
 
+
 class SchafferN2:
-    name = 'Schaffer N. 2'
-    latex_formula = r'f(x, y)=0.5 + \frac{sin^2(x^2-y^2)-0.5}{(1+0.001(x^2+y^2))^2}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Schaffer N. 2"
+    latex_formula = r"f(x, y)=0.5 + \frac{sin^2(x^2-y^2)-0.5}{(1+0.001(x^2+y^2))^2}"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -2011,8 +2352,10 @@ class SchafferN2:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -2027,15 +2370,22 @@ class SchafferN2:
 
     def __call__(self, X):
         x, y = X
-        res = 0.5 + (np.sin((x**2 + y**2))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
+        res = (
+            0.5
+            + (np.sin((x**2 + y**2)) ** 2 - 0.5)
+            / (1 + 0.001 * (x**2 + y**2)) ** 2
+        )
         return res
+
 
 class SchafferN3:
-    name = 'Schaffer N. 3'
-    latex_formula = r'f(x, y)=0.5 + \frac{sin^2(cos(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(0,1.253115)\approx0.00156685'
+    name = "Schaffer N. 3"
+    latex_formula = (
+        r"f(x, y)=0.5 + \frac{sin^2(cos(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}"
+    )
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(0,1.253115)\approx0.00156685"
     continuous = True
     convex = False
     separable = False
@@ -2046,43 +2396,10 @@ class SchafferN3:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
-
-    def __init__(self, d):
-        self.d = d
-        self.input_domain = np.array([[-4, 4], [-4, 4]])
-
-    def get_param(self):
-        return {}
-
-    def get_global_minimum(self, d):
-        X = np.array([0,1.253115])
-        return (X, self(X))
-
-    def __call__(self, X):
-        x, y = X
-        res = 0.5 + (np.sin(np.cos(np.abs(x**2 + y**2)))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
-        return res
-
-class SchafferN4:
-    name = 'Schaffer N. 4'
-    latex_formula = r"f(x, y)=0.5 + \frac{cos^2(sin(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}"
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
-    latex_formula_global_minimum = r'f(0, 1.253115)\approx0.292579'
-    continuous = True
-    convex = False
-    separable = False
-    differentiable = True
-    mutimodal = False
-    randomized_term = False
-    parametric = False
-
-    @classmethod
-    def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -2097,15 +2414,66 @@ class SchafferN4:
 
     def __call__(self, X):
         x, y = X
-        res = 0.5 + (np.cos(np.sin(np.abs(x**2 - y**2)))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
+        res = (
+            0.5
+            + (np.sin(np.cos(np.abs(x**2 + y**2))) ** 2 - 0.5)
+            / (1 + 0.001 * (x**2 + y**2)) ** 2
+        )
         return res
 
+
+class SchafferN4:
+    name = "Schaffer N. 4"
+    latex_formula = (
+        r"f(x, y)=0.5 + \frac{cos^2(sin(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}"
+    )
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-100, 100], y \in [-100, 100]"
+    latex_formula_global_minimum = r"f(0, 1.253115)\approx0.292579"
+    continuous = True
+    convex = False
+    separable = False
+    differentiable = True
+    mutimodal = False
+    randomized_term = False
+    parametric = False
+
+    @classmethod
+    def is_dim_compatible(cls, d):
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
+
+    def __init__(self, d):
+        self.d = d
+        self.input_domain = np.array([[-4, 4], [-4, 4]])
+
+    def get_param(self):
+        return {}
+
+    def get_global_minimum(self, d):
+        X = np.array([0, 1.253115])
+        return (X, self(X))
+
+    def __call__(self, X):
+        x, y = X
+        res = (
+            0.5
+            + (np.cos(np.sin(np.abs(x**2 - y**2))) ** 2 - 0.5)
+            / (1 + 0.001 * (x**2 + y**2)) ** 2
+        )
+        return res
+
+
 class Schwefel:
-    name = 'Schwefel'
-    latex_formula = r'f(\mathbf{x})=418.9829d -{\sum_{i=1}^{d} x_i sin(\sqrt{|x_i|})}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-500, 500], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(420.9687, ..., 420.9687)=0'
+    name = "Schwefel"
+    latex_formula = r"f(\mathbf{x})=418.9829d -{\sum_{i=1}^{d} x_i sin(\sqrt{|x_i|})}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-500, 500], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(420.9687, ..., 420.9687)=0"
     continuous = True
     convex = False
     separable = True
@@ -2116,10 +2484,15 @@ class Schwefel:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-500, 500] for _ in range(d)])
 
@@ -2132,15 +2505,18 @@ class Schwefel:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = 418.9829*d - np.sum(X * np.sin(np.sqrt(np.abs(X))))
+        res = 418.9829 * d - np.sum(X * np.sin(np.sqrt(np.abs(X))))
         return res
 
+
 class Schwefel2_20:
-    name = 'Schwefel 2.20'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^d |x_i|'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Schwefel 2.20"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^d |x_i|"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = True
@@ -2151,10 +2527,15 @@ class Schwefel2_20:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-100, 100] for _ in range(d)])
 
@@ -2170,12 +2551,15 @@ class Schwefel2_20:
         res = np.sum(np.abs(X))
         return res
 
+
 class Schwefel2_21:
-    name = 'Schwefel 2.21'
-    latex_formula = r'f(\mathbf{x})=\max_{i \in \llbracket 1, d\rrbracket}|x_i| '
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Schwefel 2.21"
+    latex_formula = r"f(\mathbf{x})=\max_{i \in \llbracket 1, d\rrbracket}|x_i| "
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = True
@@ -2186,10 +2570,15 @@ class Schwefel2_21:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-100, 100] for _ in range(d)])
 
@@ -2205,12 +2594,15 @@ class Schwefel2_21:
         res = np.max(np.abs(X))
         return res
 
+
 class Schwefel2_22:
-    name = 'Schwefel 2.22'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}|x_i|+\prod_{i=1}^{d}|x_i|'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Schwefel 2.22"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}|x_i|+\prod_{i=1}^{d}|x_i|"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-100, 100], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = True
@@ -2221,10 +2613,15 @@ class Schwefel2_22:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-100, 100] for _ in range(d)])
 
@@ -2240,12 +2637,15 @@ class Schwefel2_22:
         res = np.sum(np.abs(X)) + np.prod(np.abs(X))
         return res
 
+
 class Schwefel2_23:
-    name = 'Schwefel 2.23'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}x_i^{10}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Schwefel 2.23"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}x_i^{10}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = True
@@ -2256,10 +2656,15 @@ class Schwefel2_23:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-10, 10] for _ in range(d)])
 
@@ -2275,12 +2680,17 @@ class Schwefel2_23:
         res = np.sum(X**10)
         return res
 
+
 class Shekel:
-    name = 'Shekel'
-    latex_formula = r'f(\mathbf x) = -\sum_{i=1}^{m}\left(\sum_{j=1}^{4} (x_j - C_{ij})^2 + \beta_i\right)^{-1}'
-    latex_formula_dimension = r'd=4'
-    latex_formula_input_domain = r'x_i \in [0, 10], \forall i \in \llbracket 1, 4\rrbracket'
-    latex_formula_global_minimum = r'f(4, 4, 4, 4)= -10.1532 \text{ with default params}'
+    name = "Shekel"
+    latex_formula = r"f(\mathbf x) = -\sum_{i=1}^{m}\left(\sum_{j=1}^{4} (x_j - C_{ij})^2 + \beta_i\right)^{-1}"
+    latex_formula_dimension = r"d=4"
+    latex_formula_input_domain = (
+        r"x_i \in [0, 10], \forall i \in \llbracket 1, 4\rrbracket"
+    )
+    latex_formula_global_minimum = (
+        r"f(4, 4, 4, 4)= -10.1532 \text{ with default params}"
+    )
     continuous = True
     convex = False
     separable = False
@@ -2291,29 +2701,41 @@ class Shekel:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 4
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 4
 
     def __init__(self, d, m=None, C=None, beta=None):
         self.d = d
         self.input_domain = np.array([[-10, 10], [-10, 10], [-10, 10], [-10, 10]])
         self.m = m if m is not None else 10
-        self.beta = beta if beta is not None else 1/10*np.array([1, 2, 2, 4, 4, 6, 3, 7, 5, 5])
-        self.C = C if C is not None else np.array([
-            [4, 4, 4, 4],
-            [1, 1, 1, 1],
-            [8, 8, 8, 8],
-            [6, 6, 6, 6],
-            [3, 7, 3, 7],
-            [2, 9, 2, 9],
-            [5, 3, 5, 3],
-            [8, 1, 8, 1],
-            [6 ,2, 6, 2],
-            [7, 3.6, 7, 3.6]
-        ])
+        self.beta = (
+            beta
+            if beta is not None
+            else 1 / 10 * np.array([1, 2, 2, 4, 4, 6, 3, 7, 5, 5])
+        )
+        self.C = (
+            C
+            if C is not None
+            else np.array(
+                [
+                    [4, 4, 4, 4],
+                    [1, 1, 1, 1],
+                    [8, 8, 8, 8],
+                    [6, 6, 6, 6],
+                    [3, 7, 3, 7],
+                    [2, 9, 2, 9],
+                    [5, 3, 5, 3],
+                    [8, 1, 8, 1],
+                    [6, 2, 6, 2],
+                    [7, 3.6, 7, 3.6],
+                ]
+            )
+        )
 
     def get_param(self):
-        return {'m': self.m, 'C': self.C, 'beta': self.beta}
+        return {"m": self.m, "C": self.C, "beta": self.beta}
 
     def get_global_minimum(self, d):
         X = self.C[0]
@@ -2321,15 +2743,27 @@ class Shekel:
 
     def __call__(self, X):
         x1, x2, x3, x4 = X
-        res = - np.sum([np.sum((X[i] - self.C[i])**2 + self.beta[i] )**-1 for i in range(self.m)])
+        res = -np.sum(
+            [
+                np.sum((X[i] - self.C[i]) ** 2 + self.beta[i]) ** -1
+                for i in range(self.m)
+            ]
+        )
         return res
 
+
 class Shubert:
-    name = 'Shubert'
-    latex_formula = r'f(\mathbf{x})=\prod_{i=1}^{d}{\left(\sum_{j=1}^5{ cos((j+1)x_i+j)}\right)}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'\text{ has 18 global minima }f(\mathbf{x*})\approx-186.7309'
+    name = "Shubert"
+    latex_formula = (
+        r"f(\mathbf{x})=\prod_{i=1}^{d}{\left(\sum_{j=1}^5{ cos((j+1)x_i+j)}\right)}"
+    )
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = (
+        r"\text{ has 18 global minima }f(\mathbf{x*})\approx-186.7309"
+    )
     continuous = True
     convex = False
     separable = False
@@ -2340,10 +2774,15 @@ class Shubert:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-10, 10] for _ in range(d)])
 
@@ -2355,17 +2794,18 @@ class Shubert:
 
     def __call__(self, X):
         j = np.arange(1, 6)[None, :]
-        res = np.cos((j + 1) * X[:, None] + j) \
-            .sum(axis=1) \
-            .prod()
+        res = np.cos((j + 1) * X[:, None] + j).sum(axis=1).prod()
         return res
 
+
 class ShubertN3:
-    name = 'Shubert N. 3'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}{\sum_{j=1}^5{j sin((j+1)x_i+j)}}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(-7.4, -7.4)\approx-29.673336786222684'
+    name = "Shubert N. 3"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}{\sum_{j=1}^5{j sin((j+1)x_i+j)}}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(-7.4, -7.4)\approx-29.673336786222684"
     continuous = True
     convex = False
     separable = False
@@ -2376,10 +2816,15 @@ class ShubertN3:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-10, 10] for _ in range(d)])
 
@@ -2392,15 +2837,18 @@ class ShubertN3:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.sum([j*np.sin((j+1)*X + j) for j in range(1, 5+1)]))
+        res = np.sum(np.sum([j * np.sin((j + 1) * X + j) for j in range(1, 5 + 1)]))
         return res
 
+
 class ShubertN4:
-    name = 'Shubert N. 4'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}{\sum_{j=1}^5{j cos((j+1)x_i+j)}}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(4.85, 4.85)\approx-25.720968549936323'
+    name = "Shubert N. 4"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}{\sum_{j=1}^5{j cos((j+1)x_i+j)}}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(4.85, 4.85)\approx-25.720968549936323"
     continuous = True
     convex = False
     separable = False
@@ -2411,10 +2859,15 @@ class ShubertN4:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-10, 10] for _ in range(d)])
 
@@ -2427,15 +2880,18 @@ class ShubertN4:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.sum([j*np.cos((j+1)*X + j) for j in range(1, 5+1)]))
+        res = np.sum(np.sum([j * np.cos((j + 1) * X + j) for j in range(1, 5 + 1)]))
         return res
 
+
 class Sphere:
-    name = 'Sphere'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d} x_i^{2}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5.12, 5.12], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Sphere"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d} x_i^{2}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5.12, 5.12], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = True
     convex = True
     separable = True
@@ -2446,10 +2902,15 @@ class Sphere:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-5.12, 5.12] for _ in range(d)])
 
@@ -2465,12 +2926,15 @@ class Sphere:
         res = np.sum(X**2)
         return res
 
+
 class StyblinskiTank:
-    name = 'Styblinski Tank'
-    latex_formula = r'f(\mathbf{x})=\frac{1}{2}\sum_{i=1}^{d} (x_i^4 -16x_i^2+5x_i)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5, 5], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(-2.903534, ..., -2.903534)=-39.16599d'
+    name = "Styblinski Tank"
+    latex_formula = r"f(\mathbf{x})=\frac{1}{2}\sum_{i=1}^{d} (x_i^4 -16x_i^2+5x_i)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5, 5], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(-2.903534, ..., -2.903534)=-39.16599d"
     continuous = True
     convex = False
     separable = True
@@ -2481,10 +2945,15 @@ class StyblinskiTank:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
-    def __init__(self, d,):
+    def __init__(
+        self,
+        d,
+    ):
         self.d = d
         self.input_domain = np.array([[-5, 5] for _ in range(d)])
 
@@ -2497,15 +2966,18 @@ class StyblinskiTank:
 
     def __call__(self, X):
         d = X.shape[0]
-        res = 0.5*np.sum(X**4 - 16*X**2 + 5*X)
+        res = 0.5 * np.sum(X**4 - 16 * X**2 + 5 * X)
         return res
 
+
 class SumSquares:
-    name = 'Sum Squares'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}ix_i^{2}'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0) =0'
+    name = "Sum Squares"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}ix_i^{2}"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0) =0"
     continuous = True
     convex = True
     separable = True
@@ -2516,8 +2988,10 @@ class SumSquares:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -2532,16 +3006,17 @@ class SumSquares:
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d+1)
-        res = np.sum(i*X**2)
+        i = np.arange(1, d + 1)
+        res = np.sum(i * X**2)
         return res
 
+
 class ThreeHump:
-    name = 'Three-Hump'
-    latex_formula = r'f(x,y)=2x^2-1.05x^4+\frac{x^6}{6}+xy+y^2'
-    latex_formula_dimension = r'd=2'
-    latex_formula_input_domain = r'x \in [-5, 5], y \in [-5, 5]'
-    latex_formula_global_minimum = r'f(0, 0)=0'
+    name = "Three-Hump"
+    latex_formula = r"f(x,y)=2x^2-1.05x^4+\frac{x^6}{6}+xy+y^2"
+    latex_formula_dimension = r"d=2"
+    latex_formula_input_domain = r"x \in [-5, 5], y \in [-5, 5]"
+    latex_formula_global_minimum = r"f(0, 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -2552,8 +3027,10 @@ class ThreeHump:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 2
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 2
 
     def __init__(self, d):
         self.d = d
@@ -2568,15 +3045,20 @@ class ThreeHump:
 
     def __call__(self, X):
         x, y = X
-        res = 2*x**2 - 1.05*x**4 + x**6*(1/6) + x*y +y**2
+        res = 2 * x**2 - 1.05 * x**4 + x**6 * (1 / 6) + x * y + y**2
         return res
 
+
 class Trid:
-    name = 'Trid'
+    name = "Trid"
     latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}(x_i-1)^2-\sum_{i=2}^{d}(x_ix_{i-1})"
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-d^2, d^2], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(\mathbf{x}) =\frac{-d(d+4)(d-1)}{6}, $$$$x_i=i(d+1-i)'
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-d^2, d^2], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = (
+        r"f(\mathbf{x}) =\frac{-d(d+4)(d-1)}{6}, $$$$x_i=i(d+1-i)"
+    )
     continuous = True
     convex = True
     separable = False
@@ -2587,32 +3069,37 @@ class Trid:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
-        self.input_domain = np.array([[-d**2, d**2] for _ in range(d)])
+        self.input_domain = np.array([[-(d**2), d**2] for _ in range(d)])
 
     def get_param(self):
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([i*(d+1-i) for i in range(1, d+1)])
+        X = np.array([i * (d + 1 - i) for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d+1)
+        i = np.arange(1, d + 1)
         res = np.sum((X - 1) ** 2) - np.sum(X[1:] * X[:-1])
         return res
 
+
 class Wolfe:
-    name = 'Wolfe'
-    latex_formula = r'f(x, y, z) = \frac{4}{3}(x^2 + y^2 - xy)^{0.75} + z'
-    latex_formula_dimension = r'd=3'
-    latex_formula_input_domain = r'x_i \in [0, 2], \forall i \in \llbracket 1, 3\rrbracket'
-    latex_formula_global_minimum = r'f(0, 0, 0)=0'
+    name = "Wolfe"
+    latex_formula = r"f(x, y, z) = \frac{4}{3}(x^2 + y^2 - xy)^{0.75} + z"
+    latex_formula_dimension = r"d=3"
+    latex_formula_input_domain = (
+        r"x_i \in [0, 2], \forall i \in \llbracket 1, 3\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, 0, 0)=0"
     continuous = True
     convex = False
     separable = False
@@ -2623,8 +3110,10 @@ class Wolfe:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  d == 3
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return d == 3
 
     def __init__(self, d):
         self.d = d
@@ -2639,15 +3128,18 @@ class Wolfe:
 
     def __call__(self, X):
         x, y, z = X
-        res = 4 /3 *(x**2 + y**2 - x*y)**0.75 + z
+        res = 4 / 3 * (x**2 + y**2 - x * y) ** 0.75 + z
         return res
 
+
 class XinSheYang:
-    name = 'Xin She Yang'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}\text{random}_i[0,1)|x_i|^i'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5, 5], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0 \text{ (without random)}'
+    name = "Xin She Yang"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}\text{random}_i[0,1)|x_i|^i"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5, 5], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0 \text{ (without random)}"
     continuous = False
     convex = False
     separable = True
@@ -2658,8 +3150,10 @@ class XinSheYang:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -2669,22 +3163,25 @@ class XinSheYang:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([0 for i in range(1, d+1)])
+        X = np.array([0 for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d+1)
+        i = np.arange(1, d + 1)
         rand = np.random.random(d)
-        res = np.sum(rand * np.abs(X)**i)
+        res = np.sum(rand * np.abs(X) ** i)
         return res
 
+
 class XinSheYangN2:
-    name = 'Xin She Yang N.2'
-    latex_formula = r'f(\mathbf{x})=(\sum_{i=1}^{d}|x_i|)exp(-\sum_{i=1}^{d}sin(x_i^2))'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-2\pi, 2\pi], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=0'
+    name = "Xin She Yang N.2"
+    latex_formula = r"f(\mathbf{x})=(\sum_{i=1}^{d}|x_i|)exp(-\sum_{i=1}^{d}sin(x_i^2))"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-2\pi, 2\pi], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=0"
     continuous = False
     convex = False
     separable = False
@@ -2695,31 +3192,36 @@ class XinSheYangN2:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
-        self.input_domain = np.array([[-2*np.pi, 2*np.pi] for _ in range(d)])
+        self.input_domain = np.array([[-2 * np.pi, 2 * np.pi] for _ in range(d)])
 
     def get_param(self):
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([0 for i in range(1, d+1)])
+        X = np.array([0 for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.abs(X))*np.exp(-np.sum(np.sin(X**2)))
+        res = np.sum(np.abs(X)) * np.exp(-np.sum(np.sin(X**2)))
         return res
 
+
 class XinSheYangN3:
-    name = 'Xin She Yang N.3'
-    latex_formula = r'f(\mathbf{x})=exp(-\sum_{i=1}^{n}(x_i / \beta)^{2m}) - 2exp(-\sum_{i=1}^{n}x_i^2) \prod_{i=1}^{n}cos^ 2(x_i)'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-2\pi, 2\pi], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=-1, \text{ for}, m=5, \beta=15'
+    name = "Xin She Yang N.3"
+    latex_formula = r"f(\mathbf{x})=exp(-\sum_{i=1}^{n}(x_i / \beta)^{2m}) - 2exp(-\sum_{i=1}^{n}x_i^2) \prod_{i=1}^{n}cos^ 2(x_i)"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-2\pi, 2\pi], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=-1, \text{ for}, m=5, \beta=15"
     continuous = True
     convex = True
     separable = False
@@ -2730,34 +3232,39 @@ class XinSheYangN3:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d, m=5, beta=15):
         self.d = d
-        self.input_domain = np.array([[-2*np.pi, 2*np.pi] for _ in range(d)])
+        self.input_domain = np.array([[-2 * np.pi, 2 * np.pi] for _ in range(d)])
         self.m = m
         self.beta = beta
 
     def get_param(self):
-        return {'m': self.m, 'beta': self.beta}
+        return {"m": self.m, "beta": self.beta}
 
     def get_global_minimum(self, d):
-        X = np.array([0 for i in range(1, d+1)])
+        X = np.array([0 for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.exp(-np.sum((X/self.beta)**(2*self.m)))
-        res = res - 2*np.exp(-np.sum(X**2))*np.prod(np.cos(X)**2)
+        res = np.exp(-np.sum((X / self.beta) ** (2 * self.m)))
+        res = res - 2 * np.exp(-np.sum(X**2)) * np.prod(np.cos(X) ** 2)
         return res
 
+
 class XinSheYangN4:
-    name = 'Xin-She Yang N.4'
-    latex_formula = r'f(\mathbf{x})=\left(\sum_{i=1}^{d}sin^2(x_i)-exp(-\sum_{i=1}^{d}x_i^2)\right)exp(-\sum_{i=1}^{d}{sin^2\sqrt{|x_i|}})'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=-2'
+    name = "Xin-She Yang N.4"
+    latex_formula = r"f(\mathbf{x})=\left(\sum_{i=1}^{d}sin^2(x_i)-exp(-\sum_{i=1}^{d}x_i^2)\right)exp(-\sum_{i=1}^{d}{sin^2\sqrt{|x_i|}})"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-10, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=-2"
     continuous = True
     convex = True
     separable = False
@@ -2768,8 +3275,10 @@ class XinSheYangN4:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -2779,20 +3288,25 @@ class XinSheYangN4:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([0 for i in range(1, d+1)])
+        X = np.array([0 for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        res = np.sum(np.sin(X)**2 - np.exp(-np.sum(X)**2)) * np.exp(-np.sum(np.sin(np.sqrt(np.abs(X)))**2))
+        res = np.sum(np.sin(X) ** 2 - np.exp(-np.sum(X) ** 2)) * np.exp(
+            -np.sum(np.sin(np.sqrt(np.abs(X))) ** 2)
+        )
         return res
 
+
 class Zakharov:
-    name = 'Zakharov'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^n x_i^{2}+(\sum_{i=1}^n 0.5ix_i)^2 + (\sum_{i=1}^n 0.5ix_i)^4'
-    latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
-    latex_formula_input_domain = r'x_i \in [-5, 10], \forall i \in \llbracket 1, d\rrbracket'
-    latex_formula_global_minimum = r'f(0, ..., 0)=-1'
+    name = "Zakharov"
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^n x_i^{2}+(\sum_{i=1}^n 0.5ix_i)^2 + (\sum_{i=1}^n 0.5ix_i)^4"
+    latex_formula_dimension = r"d \in \mathbb{N}_{+}^{*}"
+    latex_formula_input_domain = (
+        r"x_i \in [-5, 10], \forall i \in \llbracket 1, d\rrbracket"
+    )
+    latex_formula_global_minimum = r"f(0, ..., 0)=-1"
     continuous = False
     convex = False
     separable = False
@@ -2803,8 +3317,10 @@ class Zakharov:
 
     @classmethod
     def is_dim_compatible(cls, d):
-        assert (d is None) or (isinstance(d, int) and (not d < 0)), "The dimension d must be None or a positive integer"
-        return  (d is None) or (d  > 0)
+        assert (d is None) or (
+            isinstance(d, int) and (not d < 0)
+        ), "The dimension d must be None or a positive integer"
+        return (d is None) or (d > 0)
 
     def __init__(self, d):
         self.d = d
@@ -2814,11 +3330,11 @@ class Zakharov:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([0 for i in range(1, d+1)])
+        X = np.array([0 for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d+1)
-        res = np.sum(X**2) + np.sum(0.5*i*X)**2 + np.sum(0.5*i*X)**4
+        i = np.arange(1, d + 1)
+        res = np.sum(X**2) + np.sum(0.5 * i * X) ** 2 + np.sum(0.5 * i * X) ** 4
         return res
