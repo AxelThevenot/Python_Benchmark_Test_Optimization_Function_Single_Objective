@@ -38,7 +38,6 @@ class Thevenot:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.exp(-np.sum((X / self.beta) ** (2 * self.m)))
         res = res - 2 * np.exp(-np.prod(X**2)) * np.prod(np.cos(X) ** 2)
         return res
@@ -83,7 +82,6 @@ class Ackley:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = -self.a * np.exp(-self.b * np.sqrt(np.mean(X**2)))
         res = res - np.exp(np.mean(np.cos(self.c * X))) + self.a + np.exp(1)
         return res
@@ -246,7 +244,6 @@ class Adjiman:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         x, y = X
         res = np.cos(x) * np.sin(y) - x / (y**2 + 1)
         return res
@@ -1222,7 +1219,6 @@ class Exponential:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = -np.exp(-0.5 * np.sum(X**2))
         return res
 
@@ -1599,7 +1595,6 @@ class Langermann:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(
             [
                 self.c[i]
@@ -1849,7 +1844,6 @@ class Periodic:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = 1 + np.sum(np.sin(X) ** 2) - 0.1 * np.exp(-np.sum(X**2))
         return res
 
@@ -2156,7 +2150,6 @@ class Ridge:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = X[0] + self.beta * np.sum(X[1:] ** 2) ** self.alpha
         return res
 
@@ -2200,7 +2193,6 @@ class Rosenbrock:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(
             np.abs(self.b * (X[1:] - X[:-1] ** 2) ** 2 + (self.a - X[:-1]) ** 2)
         )
@@ -2288,7 +2280,6 @@ class Salomon:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = 1 - np.cos(2 * np.pi * np.sqrt(np.sum(X**2)))
         res = res + 0.1 * np.sqrt(np.sum(X**2))
         return res
@@ -2547,7 +2538,6 @@ class Schwefel2_20:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(np.abs(X))
         return res
 
@@ -2590,7 +2580,6 @@ class Schwefel2_21:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.max(np.abs(X))
         return res
 
@@ -2633,7 +2622,6 @@ class Schwefel2_22:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(np.abs(X)) + np.prod(np.abs(X))
         return res
 
@@ -2676,7 +2664,6 @@ class Schwefel2_23:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(X**10)
         return res
 
@@ -2836,7 +2823,6 @@ class ShubertN3:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(np.sum([j * np.sin((j + 1) * X + j) for j in range(1, 5 + 1)]))
         return res
 
@@ -2879,7 +2865,6 @@ class ShubertN4:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(np.sum([j * np.cos((j + 1) * X + j) for j in range(1, 5 + 1)]))
         return res
 
@@ -2922,7 +2907,6 @@ class Sphere:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(X**2)
         return res
 
@@ -2965,7 +2949,6 @@ class StyblinskiTank:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = 0.5 * np.sum(X**4 - 16 * X**2 + 5 * X)
         return res
 
@@ -3087,7 +3070,6 @@ class Trid:
 
     def __call__(self, X):
         d = X.shape[0]
-        i = np.arange(1, d + 1)
         res = np.sum((X - 1) ** 2) - np.sum(X[1:] * X[:-1])
         return res
 
@@ -3209,7 +3191,6 @@ class XinSheYangN2:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(np.abs(X)) * np.exp(-np.sum(np.sin(X**2)))
         return res
 
@@ -3251,7 +3232,6 @@ class XinSheYangN3:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.exp(-np.sum((X / self.beta) ** (2 * self.m)))
         res = res - 2 * np.exp(-np.sum(X**2)) * np.prod(np.cos(X) ** 2)
         return res
@@ -3292,7 +3272,6 @@ class XinSheYangN4:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
         res = np.sum(np.sin(X) ** 2 - np.exp(-np.sum(X) ** 2)) * np.exp(
             -np.sum(np.sin(np.sqrt(np.abs(X))) ** 2)
         )
