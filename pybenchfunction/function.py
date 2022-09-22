@@ -119,7 +119,10 @@ class AckleyN3:
     latex_formula = r'f(x, y) = -200exp(-0.2\sqrt{x^2 + y^2}) + 5exp(cos(3x) + sin(3y))'
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-32, 32], y \in [-32, 32]'
-    latex_formula_global_minimum = r'f(x, y)\approx-195.629028238419, at$$ $$x=\pm0.682584587365898, and$$ $$ y=-0.36075325513719'
+    latex_formula_global_minimum = (
+        r"f(x, y)\approx-186.4112127, at$$ $$x=\approx0.0000000008,"
+        r" and$$ $$ y\approx-0.0068"
+    )
     continuous = False
     convex = False
     separable = False
@@ -139,8 +142,8 @@ class AckleyN3:
     def get_param(self):
         return {}
 
-    def get_global_minimum(self, d):
-        X = np.array([0.682584587365898, -0.36075325513719])
+    def get_global_minimum(self):
+        X = np.array([8.27712029e-10, -6.77344009e-03])
         return (X, self(X))
 
     def __call__(self, X):
@@ -189,7 +192,7 @@ class Adjiman:
     latex_formula = r'f(x, y)=cos(x)sin(y) - \frac{x}{y^2+1}'
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-1, 2], y \in [-1, 1]'
-    latex_formula_global_minimum = r'f(0, 0)=-2.02181'
+    latex_formula_global_minimum = r'f(2, 0.10578347)=-2.02181'
     continuous = True
     convex = False
     separable = False
@@ -211,8 +214,7 @@ class Adjiman:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([1 / (i + 1) for i in range(d)])
-        X =  np.array([0, 0])
+        X = np.array([2, 0.10578347])
         return (X, self(X))
 
     def __call__(self, X):
@@ -356,7 +358,7 @@ class Beale:
 
     def __call__(self, X):
         x, y = X
-        res = (1.5  - x + x*y) **2 + (2.25 - x + x*y**2)**2 + (2.625 - x + x*y**3)*2
+        res = (1.5  - x + x*y) **2 + (2.25 - x + x*y**2)**2 + (2.625 - x + x*y**3)**2
         return res
 
 class Bird:
@@ -801,7 +803,7 @@ class DeckkersAarts:
     latex_formula = r'f(x, y) = 10^5x^2 + y^2 -(x^2 + y^2)^2 + 10^{-5}(x^2 + y^2)^4'
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-20, 20], y \in [-20, 20]'
-    latex_formula_global_minimum = r'f(0, \pm15)\approx25628.906250000004'
+    latex_formula_global_minimum = r"f(0, \pm15)\approx-17320.76671"
     continuous = True
     convex = False
     separable = False
@@ -858,7 +860,7 @@ class DixonPrice:
         return {}
 
     def get_global_minimum(self, d):
-        X = np.array([2**((-2**(i) - 2)/2**i) for i in range(1, d+1)])
+        X = np.array([2 ** (-((2 ** i) - 2) / 2**i) for i in range(1, d + 1)])
         return (X, self(X))
 
     def __call__(self, X):
@@ -1615,11 +1617,15 @@ class PermZeroDBeta:
         return (X, self(X))
 
     def __call__(self, X):
-        d = X.shape[0]
-        res = np.sum([(np.sum([((j+1) + self.beta * (X[j] ** (i+1) -j**(i+1)))
-                        for j in range(d)])) **2
-                        for i in range(d)])
-        return res
+            d = X.shape[0]
+            j = np.arange(1, d + 1)
+            res = np.sum(
+                [
+                    np.sum((j + self.beta) * (X**i - (1 / j) ** i)) ** 2
+                    for i in range(1, d + 1)
+                ]
+            )
+            return res
 
 class PermDBeta:
     name = 'Perm d, beta'
@@ -1648,8 +1654,9 @@ class PermDBeta:
     def get_param(self):
         return {'beta': self.beta}
 
-    def get_global_minimum(self, d):
-        X = np.array([1 / (i + 1) for i in range(d)])
+    def get_global_minimum(self):
+        d = self.d
+        X = np.arange(1, d)
         return (X, self(X))
 
     def __call__(self, X):
@@ -1953,8 +1960,8 @@ class Salomon:
         res = res + 0.1 * np.sqrt(np.sum(X**2))
         return res
 
-class SchaffelN1:
-    name = 'Schaffel N. 1'
+class SchafferN1:
+    name = 'Schaffer N. 1'
     latex_formula = r'f(x, y)=0.5 + \frac{sin^2(x^2+y^2)^2-0.5}{(1+0.001(x^2+y^2))^2}'
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
@@ -1988,8 +1995,8 @@ class SchaffelN1:
         res = 0.5 + (np.sin((x**2 + y**2)**2)**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
         return res
 
-class SchaffelN2:
-    name = 'Schaffel N. 2'
+class SchafferN2:
+    name = 'Schaffer N. 2'
     latex_formula = r'f(x, y)=0.5 + \frac{sin^2(x^2-y^2)-0.5}{(1+0.001(x^2+y^2))^2}'
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
@@ -2023,8 +2030,8 @@ class SchaffelN2:
         res = 0.5 + (np.sin((x**2 + y**2))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
         return res
 
-class SchaffelN3:
-    name = 'Schaffel N. 3'
+class SchafferN3:
+    name = 'Schaffer N. 3'
     latex_formula = r'f(x, y)=0.5 + \frac{sin^2(cos(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}'
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
@@ -2058,9 +2065,9 @@ class SchaffelN3:
         res = 0.5 + (np.sin(np.cos(np.abs(x**2 + y**2)))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
         return res
 
-class SchaffelN4:
-    name = 'Schaffel N. 4'
-    latex_formula = r'f(x, y)=0.5 + \frac{sin^2(cos(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}'
+class SchafferN4:
+    name = 'Schaffer N. 4'
+    latex_formula = r"f(x, y)=0.5 + \frac{cos^2(sin(|x^2-y^2|))-0.5}{(1+0.001(x^2+y^2))^2}"
     latex_formula_dimension = r'd=2'
     latex_formula_input_domain = r'x \in [-100, 100], y \in [-100, 100]'
     latex_formula_global_minimum = r'f(0, 1.253115)\approx0.292579'
@@ -2090,7 +2097,7 @@ class SchaffelN4:
 
     def __call__(self, X):
         x, y = X
-        res = 0.5 + (np.cos(np.sin(np.abs(x**2 + y**2)))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
+        res = 0.5 + (np.cos(np.sin(np.abs(x**2 - y**2)))**2 - 0.5)/(1 + 0.001*(x**2 + y**2))**2
         return res
 
 class Schwefel:
@@ -2347,9 +2354,10 @@ class Shubert:
         return None
 
     def __call__(self, X):
-        d = X.shape[0]
-        for i in range(0,d):
-            res = np.prod(np.sum([i * np.cos((j+1)*X[i] + j) for j in range(1, 5+1)]))
+        j = np.arange(1, 6)[None, :]
+        res = np.cos((j + 1) * X[:, None] + j) \
+            .sum(axis=1) \
+            .prod()
         return res
 
 class ShubertN3:
@@ -2565,7 +2573,7 @@ class ThreeHump:
 
 class Trid:
     name = 'Trid'
-    latex_formula = r'f(\mathbf{x})=\sum_{i=1}^{d}(x_i-1)^2-\sum_{i=2}^{d}(x_i-1x_{i-1})'
+    latex_formula = r"f(\mathbf{x})=\sum_{i=1}^{d}(x_i-1)^2-\sum_{i=2}^{d}(x_ix_{i-1})"
     latex_formula_dimension = r'd \in \mathbb{N}_{+}^{*}'
     latex_formula_input_domain = r'x_i \in [-d^2, d^2], \forall i \in \llbracket 1, d\rrbracket'
     latex_formula_global_minimum = r'f(\mathbf{x}) =\frac{-d(d+4)(d-1)}{6}, $$$$x_i=i(d+1-i)'
@@ -2596,7 +2604,7 @@ class Trid:
     def __call__(self, X):
         d = X.shape[0]
         i = np.arange(1, d+1)
-        res = np.sum(X-1)**2 - np.sum(X[1:]*X[:-1])
+        res = np.sum((X - 1) ** 2) - np.sum(X[1:] * X[:-1])
         return res
 
 class Wolfe:
